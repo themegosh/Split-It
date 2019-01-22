@@ -15,7 +15,11 @@ class EditBillDialog extends Component {
         bill: this.props.bill
     };
 
-    handleClose = () => {
+    handleCancel = () => {
+        this.props.onClose(null);
+    };
+
+    handleSave = () => {
         this.props.onClose(this.state.bill);
     };
 
@@ -51,7 +55,7 @@ class EditBillDialog extends Component {
         return (
             <Dialog
                 open={this.props.open}
-                onClose={this.handleClose}
+                onClose={this.handleCancel}
                 aria-labelledby="form-dialog-title"
                 onKeyPress={this.onKeyPress}>
                 <DialogTitle id="form-dialog-title">Edit Bill</DialogTitle>
@@ -80,10 +84,7 @@ class EditBillDialog extends Component {
                         <Select
                             value={this.state.bill.payer}
                             onChange={this.onPayerChange}
-                            inputProps={{
-                                name: "bill.payer",
-                                id: "bill.payer"
-                            }}>
+                            inputProps={{ name: "bill.payer", id: "bill.payer" }}>
                             {this.props.allPeople.map(person => (
                                 <MenuItem key={person.name} value={person.name}>
                                     {person.name}
@@ -99,10 +100,10 @@ class EditBillDialog extends Component {
                         </Button>
                     ) : null}
 
-                    <Button onClick={this.handleClose} color="default">
+                    <Button onClick={this.handleCancel} color="default">
                         Cancel
                     </Button>
-                    <Button onClick={this.handleClose} color="primary">
+                    <Button onClick={this.handleSave} color="primary">
                         Save
                     </Button>
                 </DialogActions>

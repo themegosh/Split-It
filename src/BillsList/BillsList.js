@@ -11,7 +11,6 @@ class BillsList extends Component {
     };
 
     handleClickOpen = (index, bill) => {
-        console.log("handleClickOpen", index);
         this.setState({
             open: true,
             selectedBill: bill,
@@ -19,10 +18,11 @@ class BillsList extends Component {
         });
     };
 
-    handleClose = newBill => {
+    handleClose = aBill => {
+        if (aBill) {
+            this.props.handleBillUpdated(this.state.selectedIndex, aBill);
+        }
         this.setState({ open: false });
-        console.log("handleClose", newBill);
-        this.props.handleBillUpdated(this.state.selectedIndex, newBill);
     };
 
     btnNewBillClicked = () => {
@@ -60,7 +60,6 @@ class BillsList extends Component {
             <div className="bills">
                 <h2>Bills</h2>
                 {bills.map((bill, key) => {
-                    console.log("activity render bill payer", bill.payer);
                     return (
                         <Bill
                             bill={bill}
