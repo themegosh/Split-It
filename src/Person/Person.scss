@@ -1,0 +1,46 @@
+.person {
+    padding: 16px 20px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+    margin-bottom: 16px;
+    background-color: #fff;
+
+    &:hover {
+        cursor: pointer;
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 16px;
+
+        .name {
+            margin: 0;
+        }
+    }
+
+    .footer {
+        display: flex;
+        flex-direction: row;
+
+        .payer {
+            font-weight: bold;
+            margin-right: 4px;
+        }
+
+        .paid-for-wrapper {
+            display: flex;
+            flex-direction: row;
+
+            .name {
+                color: #fff;
+                background-color: #282c34;
+                font-size: 0.8em;
+                border-radius: 3px;
+                padding: 4px 8px;
+                margin-right: 4px;
+            }
+        }
+    }
+}

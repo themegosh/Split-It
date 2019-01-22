@@ -1,0 +1,33 @@
+.activities {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    max-width: 1500px;
+    margin: 0 auto;
+
+    .activities-summary {
+        display: flex;
+        padding: 16px 20px;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+        margin-bottom: 16px;
+        background-color: #fff;
+    }
+
+    .middle-wrapper {
+        display: flex;
+        flex-direction: row;
+        max-width: 1500px;
+        margin: 0 auto;
+        width: 100%;
+
+        .bills {
+            flex: 60%;
+            padding: 0 7px;
+        }
+
+        .people {
+            flex: 40%;
+            padding: 0 7px;
+        }
+    }
+}
