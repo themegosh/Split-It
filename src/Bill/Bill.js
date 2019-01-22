@@ -17,7 +17,7 @@ class Bill extends Component {
                     </div>
                     <div className="footer">
                         <div className="payer">{bill.payer} </div>
-                        Paid For:
+                        paid for
                         <div className="paid-for-wrapper">
                             {bill.paidFor.map((person, key) => {
                                 return (

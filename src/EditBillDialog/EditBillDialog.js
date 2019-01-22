@@ -9,12 +9,27 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
 class EditBillDialog extends Component {
-    state = {
-        bill: this.props.bill
-    };
+    constructor(props) {
+        super();
 
+        let chkPeople = props.allPeople.map(person => {
+            return {
+                name: person.name,
+                checked: props.bill.paidFor.includes(person.name)
+            };
+        });
+
+        this.state = {
+            bill: props.bill,
+            chkPeople
+        };
+    }
     handleCancel = () => {
         this.props.onClose(null);
     };
@@ -41,7 +56,7 @@ class EditBillDialog extends Component {
 
     onCostChanged = event => {
         let bill = Object.assign({}, this.state.bill);
-        bill.cost = parseFloat(event.target.value);
+        bill.cost = event.target.value ? parseFloat(event.target.value) : "";
         this.setState({ bill });
     };
 
@@ -51,7 +66,26 @@ class EditBillDialog extends Component {
         }
     };
 
+    onPaidForCheckedChange = name => event => {
+        let chkPeople = [...this.state.chkPeople];
+
+        chkPeople.find(x => x.name === name).checked = event.target.checked;
+
+        let bill = Object.assign({}, this.state.bill);
+
+        bill.paidFor = chkPeople
+            .filter(x => x.checked)
+            .map(person => {
+                return person.name;
+            });
+
+        this.setState({ chkPeople, bill });
+    };
+
     render() {
+        const bill = this.state.bill;
+        const error = !bill.name || !bill.cost || !bill.payer || bill.paidFor.length < 1;
+
         return (
             <Dialog
                 open={this.props.open}
@@ -60,37 +94,66 @@ class EditBillDialog extends Component {
                 onKeyPress={this.onKeyPress}>
                 <DialogTitle id="form-dialog-title">Edit Bill</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="bill.name"
-                        label="Bill Name"
-                        type="text"
-                        fullWidth
-                        value={this.state.bill.name}
-                        onChange={this.onNameChanged}
-                    />
-                    <TextField
-                        margin="dense"
-                        id="bill.cost"
-                        label="Cost"
-                        type="number"
-                        fullWidth
-                        value={this.state.bill.cost}
-                        onChange={this.onCostChanged}
-                    />
-                    <FormControl fullWidth>
+                    <FormControl required fullWidth>
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="bill.name"
+                            label="Bill Name"
+                            type="text"
+                            fullWidth
+                            value={bill.name}
+                            onChange={this.onNameChanged}
+                            error={!bill.name}
+                        />
+                    </FormControl>
+                    <FormControl required fullWidth>
+                        <TextField
+                            required
+                            margin="dense"
+                            id="bill.cost"
+                            label="Cost"
+                            type="number"
+                            fullWidth
+                            value={bill.cost}
+                            onChange={this.onCostChanged}
+                            error={!bill.cost}
+                        />
+                    </FormControl>
+                    <FormControl required fullWidth>
                         <InputLabel htmlFor="bill.payer">Who paid?</InputLabel>
                         <Select
-                            value={this.state.bill.payer}
+                            value={bill.payer}
                             onChange={this.onPayerChange}
-                            inputProps={{ name: "bill.payer", id: "bill.payer" }}>
+                            inputProps={{ name: "bill.payer", id: "bill.payer" }}
+                            error={!bill.payer}>
                             {this.props.allPeople.map(person => (
                                 <MenuItem key={person.name} value={person.name}>
                                     {person.name}
                                 </MenuItem>
                             ))}
                         </Select>
+                    </FormControl>
+                    <FormControl required error={bill.paidFor.length < 1} component="fieldset" margin="dense">
+                        <FormLabel component="legend">Paid for</FormLabel>
+                        <FormGroup>
+                            {this.state.chkPeople.map((person, key) => {
+                                return (
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={person.checked}
+                                                onChange={this.onPaidForCheckedChange(person.name)}
+                                                value={person.name}
+                                            />
+                                        }
+                                        label={person.name}
+                                        key={key}
+                                    />
+                                );
+                            })}
+                        </FormGroup>
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
@@ -103,7 +166,7 @@ class EditBillDialog extends Component {
                     <Button onClick={this.handleCancel} color="default">
                         Cancel
                     </Button>
-                    <Button onClick={this.handleSave} color="primary">
+                    <Button onClick={this.handleSave} disabled={error} color="primary">
                         Save
                     </Button>
                 </DialogActions>

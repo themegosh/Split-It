@@ -17,7 +17,7 @@ class Activity extends Component {
                 name: "Car Rental",
                 cost: 100.45,
                 payer: "Sean",
-                paidFor: ["Doug", "Dean", "Sean"],
+                paidFor: ["Doug", "Sean"],
                 splitCost: 0
             }
         ],
