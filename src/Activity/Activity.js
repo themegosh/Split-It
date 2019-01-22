@@ -59,6 +59,22 @@ class Activity extends Component {
         this.setState(this.processActivity(bills));
     };
 
+    handlePersonUpdated = (index, aPerson) => {
+        console.log("handlePersonUpdated", aPerson, index);
+        //shallow copy
+        let people = [...this.state.people];
+
+        if (index === -1) {
+            //adding
+            people.push(aPerson);
+        } else {
+            //updating
+            people[index] = aPerson;
+        }
+
+        this.setState(this.processActivity(this.state.bills));
+    };
+
     handleBillDeleted = index => {
         console.log("handleBillDeleted", index);
         //shallow copy
@@ -68,8 +84,6 @@ class Activity extends Component {
 
         this.setState(this.processActivity(bills));
     };
-
-    btnNewBillClicked() {}
 
     processActivity(bills) {
         let people = this.state.people;
