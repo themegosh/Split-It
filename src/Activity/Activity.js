@@ -56,10 +56,17 @@ class Activity extends Component {
             bills[index] = aBill;
         }
 
-        var newState = this.processActivity(bills);
-        this.setState(newState);
-        console.log("this.state.bills", this.state.bills);
-        console.log("this.state.bills newState", newState);
+        this.setState(this.processActivity(bills));
+    };
+
+    handleBillDeleted = index => {
+        console.log("handleBillDeleted", index);
+        //shallow copy
+        let bills = [...this.state.bills];
+
+        bills.splice(index, 1);
+
+        this.setState(this.processActivity(bills));
     };
 
     btnNewBillClicked() {}
@@ -117,7 +124,12 @@ class Activity extends Component {
                     <div>totalCostsOwed {this.state.totalCostsOwed}</div>
                 </div>
                 <div className="middle-wrapper">
-                    <BillsList bills={bills} people={people} handleBillUpdated={this.handleBillUpdated} />
+                    <BillsList
+                        bills={bills}
+                        people={people}
+                        handleBillUpdated={this.handleBillUpdated}
+                        handleBillDeleted={this.handleBillDeleted}
+                    />
                     <PeopleList people={people} />
                 </div>
             </div>

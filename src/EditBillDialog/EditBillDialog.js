@@ -24,7 +24,7 @@ class EditBillDialog extends Component {
     };
 
     handleDelete = () => {
-        this.props.onDelete(this.state.bill);
+        this.props.handleDelete(this.state.bill);
     };
 
     onPayerChange = event => {

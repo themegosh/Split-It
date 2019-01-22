@@ -25,6 +25,12 @@ class BillsList extends Component {
         this.setState({ open: false });
     };
 
+    handleDelete = index => {
+        console.log("handleDelete", index);
+        this.props.handleBillDeleted(index);
+        this.setState({ open: false });
+    };
+
     btnNewBillClicked = () => {
         this.setState({
             open: true,
@@ -49,6 +55,7 @@ class BillsList extends Component {
                 <EditBillDialog
                     open={this.state.open}
                     onClose={this.handleClose}
+                    handleDelete={this.handleDelete}
                     bill={this.state.selectedBill}
                     index={this.state.selectedIndex}
                     allPeople={people}
