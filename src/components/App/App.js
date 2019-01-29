@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.scss";
-import Activity from "./Activity/Activity";
+import Activity from "../Activity/Activity";
 
 class App extends Component {
     render() {
