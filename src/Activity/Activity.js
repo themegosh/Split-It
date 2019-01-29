@@ -9,34 +9,30 @@ class Activity extends Component {
             {
                 name: "Hotel",
                 cost: 300.51,
-                payer: "Dean",
-                paidFor: ["Doug", "Dean", "Sean"],
+                payer: 1,
+                paidFor: [0, 1, 2],
                 splitCost: 0
             },
             {
                 name: "Car Rental",
                 cost: 100.45,
-                payer: "Sean",
-                paidFor: ["Doug", "Sean"],
+                payer: 2,
+                paidFor: [0, 2],
                 splitCost: 0
             }
         ],
-        people: [
-            { name: "Doug", totalCostsPaid: 0, totalCostsOwed: 0, difference: 0 },
-            { name: "Dean", totalCostsPaid: 0, totalCostsOwed: 0, difference: 0 },
-            { name: "Sean", totalCostsPaid: 0, totalCostsOwed: 0, difference: 0 }
-        ],
+        people: [{ name: "Doug" }, { name: "Dean" }, { name: "Sean" }],
         totalCostsPaid: 0,
         totalCostsOwed: 0,
         editBillOpen: false
     };
     componentDidMount() {
-        this.setState(this.processActivity(this.state.bills));
+        this.setState(this.processActivity(this.state.bills, this.state.people));
     }
 
-    isBillOwedBy(bill, name) {
+    isBillOwedBy(people, bill, name) {
         for (var i = 0; i < bill.paidFor.length; i++) {
-            if (name === bill.paidFor[i]) {
+            if (name === people[bill.paidFor[i]].name) {
                 return true;
             }
         }
@@ -56,7 +52,17 @@ class Activity extends Component {
             bills[index] = aBill;
         }
 
-        this.setState(this.processActivity(bills));
+        this.setState(this.processActivity(bills, this.state.people));
+    };
+
+    handleBillDeleted = index => {
+        console.log("handleBillDeleted", index);
+        //shallow copy
+        let bills = [...this.state.bills];
+
+        bills.splice(index, 1);
+
+        this.setState(this.processActivity(bills, this.state.people));
     };
 
     handlePersonUpdated = (index, aPerson) => {
@@ -72,21 +78,22 @@ class Activity extends Component {
             people[index] = aPerson;
         }
 
-        this.setState(this.processActivity(this.state.bills));
+        this.setState(this.processActivity(this.state.bills, people));
     };
 
-    handleBillDeleted = index => {
-        console.log("handleBillDeleted", index);
+    handlePersonDeleted = index => {
+        console.log("handlePersonDeleted", index);
         //shallow copy
-        let bills = [...this.state.bills];
+        let people = [...this.state.people];
 
-        bills.splice(index, 1);
+        people.splice(index, 1);
 
-        this.setState(this.processActivity(bills));
+        this.setState(this.processActivity(this.state.bills, people));
     };
 
-    processActivity(bills) {
-        let people = this.state.people;
+    processActivity(bills, people) {
+        console.log("processActivity", bills, people);
+
         let totalCostsPaid = 0;
         let totalCostsOwed = 0;
 
@@ -101,12 +108,13 @@ class Activity extends Component {
         people.forEach(person => {
             person.totalCostsPaid = 0;
             person.totalCostsOwed = 0;
+            person.difference = 0;
 
             bills.forEach(bill => {
-                if (bill.payer === person.name) {
+                if (people[bill.payer].name === person.name) {
                     person.totalCostsPaid += bill.cost;
                 }
-                if (this.isBillOwedBy(bill, person.name)) {
+                if (this.isBillOwedBy(people, bill, person.name)) {
                     person.totalCostsOwed += bill.splitCost;
                 }
             });
@@ -123,7 +131,7 @@ class Activity extends Component {
             totalCostsOwed,
             totalCostsPaid,
             bills: bills,
-            people: this.state.people
+            people: people
         };
     }
 
@@ -143,8 +151,9 @@ class Activity extends Component {
                         people={people}
                         handleBillUpdated={this.handleBillUpdated}
                         handleBillDeleted={this.handleBillDeleted}
+                        handlePersonDeleted={this.handlePersonDeleted}
                     />
-                    <PeopleList people={people} />
+                    <PeopleList people={people} handlePersonUpdated={this.handlePersonUpdated} />
                 </div>
             </div>
         );

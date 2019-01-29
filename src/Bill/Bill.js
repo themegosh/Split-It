@@ -4,6 +4,7 @@ import "./Bill.scss";
 class Bill extends Component {
     render() {
         let bill = this.props.bill;
+        let people = this.props.people;
 
         return (
             <div className="bill-wrapper">
@@ -16,13 +17,13 @@ class Bill extends Component {
                         </div>
                     </div>
                     <div className="footer">
-                        <div className="payer">{bill.payer} </div>
+                        <div className="payer">{people[bill.payer].name} </div>
                         paid for
                         <div className="paid-for-wrapper">
                             {bill.paidFor.map((person, key) => {
                                 return (
                                     <div className="name" key={key}>
-                                        {person}
+                                        {people[person].name}
                                     </div>
                                 );
                             })}

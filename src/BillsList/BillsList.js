@@ -72,6 +72,7 @@ class BillsList extends Component {
                             bill={bill}
                             key={key}
                             index={key}
+                            people={people}
                             handleBillUpdated={this.handleBillUpdated}
                             handleClickOpen={this.handleClickOpen}
                         />

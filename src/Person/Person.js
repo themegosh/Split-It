@@ -11,7 +11,7 @@ class Person extends Component {
         };
 
         return (
-            <div className="person">
+            <div className="person" onClick={() => this.props.handleClickOpen(this.props.index, person)}>
                 <div className="header">
                     <h3 className="name">{person.name}</h3>
                 </div>

@@ -10,10 +10,10 @@ class PeopleList extends Component {
         selectedIndex: null
     };
 
-    handleClickOpen = (index, bill) => {
+    handleClickOpen = (index, person) => {
         this.setState({
             open: true,
-            selectedPerson: bill,
+            selectedPerson: person,
             selectedIndex: index
         });
     };
@@ -60,7 +60,15 @@ class PeopleList extends Component {
             <div className="people">
                 <h2>People</h2>
                 {people.map((person, key) => {
-                    return <Person person={person} key={key} />;
+                    return (
+                        <Person
+                            person={person}
+                            key={key}
+                            index={key}
+                            handlePersonUpdated={this.handlePersonUpdated}
+                            handleClickOpen={this.handleClickOpen}
+                        />
+                    );
                 })}
                 <Button variant="contained" color="primary" onClick={this.btnNewPersonClicked}>
                     New Bill

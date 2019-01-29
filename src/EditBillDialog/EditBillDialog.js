@@ -18,10 +18,10 @@ class EditBillDialog extends Component {
     constructor(props) {
         super();
 
-        let chkPeople = props.allPeople.map(person => {
+        let chkPeople = props.allPeople.map((person, key) => {
             return {
                 name: person.name,
-                checked: props.bill.paidFor.includes(person.name)
+                checked: props.bill.paidFor.includes(key)
             };
         });
 
@@ -45,6 +45,7 @@ class EditBillDialog extends Component {
     onPayerChange = event => {
         let bill = Object.assign({}, this.state.bill);
         bill.payer = event.target.value;
+        console.log("onPayerChange", bill.payer);
         this.setState({ bill });
     };
 
@@ -66,17 +67,17 @@ class EditBillDialog extends Component {
         }
     };
 
-    onPaidForCheckedChange = name => event => {
+    onPaidForCheckedChange = key => event => {
         let chkPeople = [...this.state.chkPeople];
 
-        chkPeople.find(x => x.name === name).checked = event.target.checked;
+        chkPeople[key].checked = event.target.checked;
 
         let bill = Object.assign({}, this.state.bill);
 
         bill.paidFor = chkPeople
             .filter(x => x.checked)
-            .map(person => {
-                return person.name;
+            .map((person, key) => {
+                return key;
             });
 
         this.setState({ chkPeople, bill });
@@ -128,8 +129,8 @@ class EditBillDialog extends Component {
                             onChange={this.onPayerChange}
                             inputProps={{ name: "bill.payer", id: "bill.payer" }}
                             error={!bill.payer}>
-                            {this.props.allPeople.map(person => (
-                                <MenuItem key={person.name} value={person.name}>
+                            {this.props.allPeople.map((person, key) => (
+                                <MenuItem key={key} value={key}>
                                     {person.name}
                                 </MenuItem>
                             ))}
@@ -144,7 +145,7 @@ class EditBillDialog extends Component {
                                         control={
                                             <Checkbox
                                                 checked={person.checked}
-                                                onChange={this.onPaidForCheckedChange(person.name)}
+                                                onChange={this.onPaidForCheckedChange(key)}
                                                 value={person.name}
                                             />
                                         }
