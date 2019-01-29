@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./Activity.scss";
+import "./index.scss";
 import BillsList from "../BillsList/BillsList";
 import PeopleList from "../PeopleList/PeopleList";
 
@@ -21,13 +21,15 @@ class Activity extends Component {
                 splitCost: 0
             }
         ],
-        people: [{ name: "Doug" }, { name: "Dean" }, { name: "Sean" }],
+        people: [{ name: "Bob" }, { name: "Joe" }, { name: "Mike" }],
         totalCostsPaid: 0,
         totalCostsOwed: 0,
         editBillOpen: false
     };
     componentDidMount() {
-        this.setState(this.processActivity(this.state.bills, this.state.people));
+        this.setState(
+            this.processActivity(this.state.bills, this.state.people)
+        );
     }
 
     isBillOwedBy(people, bill, name) {
@@ -153,7 +155,10 @@ class Activity extends Component {
                         handleBillDeleted={this.handleBillDeleted}
                         handlePersonDeleted={this.handlePersonDeleted}
                     />
-                    <PeopleList people={people} handlePersonUpdated={this.handlePersonUpdated} />
+                    <PeopleList
+                        people={people}
+                        handlePersonUpdated={this.handlePersonUpdated}
+                    />
                 </div>
             </div>
         );

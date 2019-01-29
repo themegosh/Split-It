@@ -73,7 +73,10 @@ class EditPersonDialog extends Component {
                     <Button onClick={this.handleCancel} color="default">
                         Cancel
                     </Button>
-                    <Button onClick={this.handleSave} disabled={error} color="primary">
+                    <Button
+                        onClick={this.handleSave}
+                        disabled={error}
+                        color="primary">
                         Save
                     </Button>
                 </DialogActions>

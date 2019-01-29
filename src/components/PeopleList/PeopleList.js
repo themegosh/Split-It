@@ -34,7 +34,12 @@ class PeopleList extends Component {
     btnNewPersonClicked = () => {
         this.setState({
             open: true,
-            selectedPerson: { name: "", totalCostsPaid: 0, totalCostsOwed: 0, difference: 0 },
+            selectedPerson: {
+                name: "",
+                totalCostsPaid: 0,
+                totalCostsOwed: 0,
+                difference: 0
+            },
             selectedIndex: -1
         });
     };
@@ -70,7 +75,10 @@ class PeopleList extends Component {
                         />
                     );
                 })}
-                <Button variant="contained" color="primary" onClick={this.btnNewPersonClicked}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={this.btnNewPersonClicked}>
                     New Bill
                 </Button>
                 {editDialog}

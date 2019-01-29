@@ -78,7 +78,10 @@ class BillsList extends Component {
                         />
                     );
                 })}
-                <Button variant="contained" color="primary" onClick={this.btnNewBillClicked}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={this.btnNewBillClicked}>
                     New Bill
                 </Button>
                 {editDialog}
