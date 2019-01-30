@@ -3,8 +3,7 @@ import "./Bill.scss";
 
 class Bill extends Component {
     render() {
-        let bill = this.props.bill;
-        let people = this.props.people;
+        const { bill, people } = this.props;
 
         return (
             <div className="bill-wrapper">

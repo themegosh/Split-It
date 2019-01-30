@@ -46,8 +46,7 @@ class BillsList extends Component {
     };
 
     render() {
-        let bills = this.props.bills;
-        let people = this.props.people || [];
+        const { bills, people } = this.props;
 
         let editDialog;
         if (this.state.open) {

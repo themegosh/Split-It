@@ -84,13 +84,14 @@ class EditBillDialog extends Component {
     };
 
     render() {
-        const bill = this.state.bill;
+        const { bill, chkPeople } = this.state;
+        const { allPeople, open, index } = this.props;
         const error =
             !bill.name || !bill.cost || !bill.payer || bill.paidFor.length < 1;
 
         return (
             <Dialog
-                open={this.props.open}
+                open={open}
                 onClose={this.handleCancel}
                 aria-labelledby="form-dialog-title"
                 onKeyPress={this.onKeyPress}>
@@ -133,7 +134,7 @@ class EditBillDialog extends Component {
                                 id: "bill.payer"
                             }}
                             error={!bill.payer}>
-                            {this.props.allPeople.map((person, key) => (
+                            {allPeople.map((person, key) => (
                                 <MenuItem key={key} value={key}>
                                     {person.name}
                                 </MenuItem>
@@ -147,7 +148,7 @@ class EditBillDialog extends Component {
                         margin="dense">
                         <FormLabel component="legend">Paid for</FormLabel>
                         <FormGroup>
-                            {this.state.chkPeople.map((person, key) => {
+                            {chkPeople.map((person, key) => {
                                 return (
                                     <FormControlLabel
                                         control={
@@ -168,7 +169,7 @@ class EditBillDialog extends Component {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    {this.props.index !== -1 ? (
+                    {index !== -1 ? (
                         <Button onClick={this.handleDelete} color="secondary">
                             Delete
                         </Button>

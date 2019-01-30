@@ -138,14 +138,13 @@ class Activity extends Component {
     }
 
     render() {
-        const bills = this.state.bills;
-        const people = this.state.people;
+        const { bills, totalCostsPaid, totalCostsOwed, people } = this.state;
 
         return (
             <div className="activities">
                 <div className="activities-summary">
-                    <div>totalCostsPaid {this.state.totalCostsPaid}</div>
-                    <div>totalCostsOwed {this.state.totalCostsOwed}</div>
+                    <div>totalCostsPaid {totalCostsPaid}</div>
+                    <div>totalCostsOwed {totalCostsOwed}</div>
                 </div>
                 <div className="middle-wrapper">
                     <BillsList

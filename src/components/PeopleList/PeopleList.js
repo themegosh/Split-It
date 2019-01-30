@@ -45,17 +45,18 @@ class PeopleList extends Component {
     };
 
     render() {
-        let people = this.props.people;
+        const { people } = this.props;
+        const { open, selectedIndex, selectedPerson } = this.state;
 
         let editDialog;
-        if (this.state.open) {
+        if (open) {
             editDialog = (
                 <EditPersonDialog
                     open={this.state.open}
                     onClose={this.handleClose}
                     handleDelete={this.handleDelete}
-                    person={this.state.selectedPerson}
-                    index={this.state.selectedIndex}
+                    person={selectedPerson}
+                    index={selectedIndex}
                     allPeople={people}
                 />
             );

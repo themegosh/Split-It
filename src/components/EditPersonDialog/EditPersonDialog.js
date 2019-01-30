@@ -37,12 +37,13 @@ class EditPersonDialog extends Component {
     };
 
     render() {
-        const person = this.state.person;
+        const { person } = this.state;
+        const { index, open } = this.props;
         const error = !person.name;
 
         return (
             <Dialog
-                open={this.props.open}
+                open={open}
                 onClose={this.handleCancel}
                 aria-labelledby="form-dialog-title"
                 onKeyPress={this.onKeyPress}>
@@ -64,7 +65,7 @@ class EditPersonDialog extends Component {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    {this.props.index !== -1 ? (
+                    {index !== -1 ? (
                         <Button onClick={this.handleDelete} color="secondary">
                             Delete
                         </Button>
