@@ -80,7 +80,7 @@ class PeopleList extends Component {
                     variant="contained"
                     color="primary"
                     onClick={this.btnNewPersonClicked}>
-                    New Bill
+                    Add Person
                 </Button>
                 {editDialog}
             </div>

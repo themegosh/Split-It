@@ -8,9 +8,9 @@ import PasswordForgetPage from "../PasswordForget";
 import AccountPage from "../Account";
 import AdminPage from "../Admin";
 import ActivityPage from "../Activity";
+import ActivityListPage from "../ActivityList";
 
 import * as ROUTES from "../../constants/routes";
-import { AuthUserContext } from "../Session";
 import { withAuthentication } from "../Session";
 
 import "./index.scss";
@@ -18,12 +18,17 @@ import "./index.scss";
 const App = () => (
     <Router>
         <div>
-            <header className="header">
+            {/* <header className="header">
                 <h1>Split It</h1>
-            </header>
+            </header> */}
             <Navigation />
 
-            <Route exact path={ROUTES.HOME} component={ActivityPage} />
+            <Route exact path={ROUTES.HOME} component={ActivityListPage} />
+            <Route
+                exact
+                path={`${ROUTES.ACTIVITY}/:id`}
+                component={ActivityPage}
+            />
             <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
             <Route path={ROUTES.SIGN_IN} component={SignInPage} />
             <Route

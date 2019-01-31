@@ -17,10 +17,13 @@ const Navigation = () => (
 const NavigationAuth = () => (
     <ul>
         <li>
-            <Link to={ROUTES.HOME}>Home</Link>
+            <Link to={ROUTES.HOME}>Activities</Link>
         </li>
         <li>
             <Link to={ROUTES.ACCOUNT}>Account</Link>
+        </li>
+        <li>
+            <Link to={ROUTES.ADMIN}>Admin</Link>
         </li>
         <li>
             <SignOutButton />

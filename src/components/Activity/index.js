@@ -2,34 +2,90 @@ import React, { Component } from "react";
 import "./index.scss";
 import BillsList from "../BillsList/BillsList";
 import PeopleList from "../PeopleList/PeopleList";
+import { withFirebase } from "../Firebase";
+import { withAuthorization } from "../Session";
 
 class Activity extends Component {
     state = {
         bills: [
-            {
-                name: "Hotel",
-                cost: 300.51,
-                payer: 1,
-                paidFor: [0, 1, 2],
-                splitCost: 0
-            },
-            {
-                name: "Car Rental",
-                cost: 100.45,
-                payer: 2,
-                paidFor: [0, 2],
-                splitCost: 0
-            }
+            // {
+            //     name: "Hotel",
+            //     cost: 300.51,
+            //     payer: 1,
+            //     paidFor: [0, 1, 2],
+            //     splitCost: 0
+            // },
+            // {
+            //     name: "Car Rental",
+            //     cost: 100.45,
+            //     payer: 2,
+            //     paidFor: [0, 2],
+            //     splitCost: 0
+            // }
         ],
-        people: [{ name: "Bob" }, { name: "Joe" }, { name: "Mike" }],
+        people: [
+            // { name: "Bob" }, { name: "Joe" }, { name: "Mike" }
+        ],
         totalCostsPaid: 0,
         totalCostsOwed: 0,
         editBillOpen: false
     };
+
+    componentWillUnmount() {
+        this.props.firebase.people().off();
+        this.props.firebase.bills().off();
+    }
+
     componentDidMount() {
+        console.log("props", this.props.match.params.id);
         this.setState(
             this.processActivity(this.state.bills, this.state.people)
         );
+
+        console.log("authUser", this.props.authUser.uid);
+
+        this.setState({ loading: true });
+
+        this.props.firebase
+            .people(this.props.authUser.uid)
+            .on("value", snapshot => {
+                const personObj = snapshot.val();
+
+                let people = [];
+
+                if (personObj) {
+                    console.log("personObj", personObj);
+                    people = Object.keys(personObj).map(key => ({
+                        ...personObj[key],
+                        uid: key
+                    }));
+
+                    console.log("bills", people);
+                }
+
+                this.setState({
+                    people: people,
+                    loading: false
+                });
+            });
+
+        this.props.firebase.bills().on("value", snapshot => {
+            const billObj = snapshot.val();
+
+            let bills = [];
+            if (billObj) {
+                bills = Object.keys(billObj).map(key => ({
+                    ...billObj[key],
+                    uid: key
+                }));
+
+                console.log("bills", bills);
+            }
+            this.setState({
+                bills: bills,
+                loading: false
+            });
+        });
     }
 
     isBillOwedBy(people, bill, name) {
@@ -68,7 +124,12 @@ class Activity extends Component {
     };
 
     handlePersonUpdated = (index, aPerson) => {
-        console.log("handlePersonUpdated", aPerson, index);
+        console.log(
+            "handlePersonUpdated",
+            aPerson,
+            index,
+            this.props.authUser.uid
+        );
         //shallow copy
         let people = [...this.state.people];
 
@@ -79,6 +140,8 @@ class Activity extends Component {
             //updating
             people[index] = aPerson;
         }
+
+        this.props.firebase.people(this.props.authUser.uid).set(people);
 
         this.setState(this.processActivity(this.state.bills, people));
     };
@@ -94,8 +157,6 @@ class Activity extends Component {
     };
 
     processActivity(bills, people) {
-        console.log("processActivity", bills, people);
-
         let totalCostsPaid = 0;
         let totalCostsOwed = 0;
 
@@ -127,7 +188,7 @@ class Activity extends Component {
             person.difference = person.totalCostsPaid - person.totalCostsOwed;
         });
 
-        console.log(people, bills);
+        console.log("end of processActivity", bills, people);
 
         return {
             totalCostsOwed,
@@ -147,6 +208,10 @@ class Activity extends Component {
                     <div>totalCostsOwed {totalCostsOwed}</div>
                 </div>
                 <div className="middle-wrapper">
+                    <PeopleList
+                        people={people}
+                        handlePersonUpdated={this.handlePersonUpdated}
+                    />
                     <BillsList
                         bills={bills}
                         people={people}
@@ -154,14 +219,12 @@ class Activity extends Component {
                         handleBillDeleted={this.handleBillDeleted}
                         handlePersonDeleted={this.handlePersonDeleted}
                     />
-                    <PeopleList
-                        people={people}
-                        handlePersonUpdated={this.handlePersonUpdated}
-                    />
                 </div>
             </div>
         );
     }
 }
 
-export default Activity;
+const condition = authUser => !!authUser;
+
+export default withAuthorization(condition)(withFirebase(Activity));
