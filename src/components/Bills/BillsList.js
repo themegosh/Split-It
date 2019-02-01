@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./BillsList.scss";
-import EditBillDialog from "../EditBillDialog/";
-import Bill from "../Bill/Bill";
+import EditBillDialog from "./EditBillDialog";
+import Bill from "./Bill";
 import Button from "@material-ui/core/Button";
 import { withFirebase } from "../Firebase";
 import { withAuthorization } from "../Session";

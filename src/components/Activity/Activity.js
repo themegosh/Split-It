@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import "./index.scss";
-import BillsList from "../BillsList/BillsList";
-import PeopleList from "../PeopleList/PeopleList";
+import "./Activity.scss";
+import BillsList from "../Bills/BillsList";
+import PeopleList from "../People/PeopleList";
 import { withFirebase } from "../Firebase";
 import { withAuthorization } from "../Session";
 

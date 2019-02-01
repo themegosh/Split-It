@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import SignOutButton from "../SignOut";
+import SignOutButton from "../SignOut/SignOutButton";
 import * as ROUTES from "../../constants/routes";
 import { AuthUserContext } from "../Session";
 

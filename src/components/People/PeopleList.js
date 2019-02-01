@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import "./PeopleList.scss";
-import Person from "../Person/Person";
+import Person from "./Person";
 import Button from "@material-ui/core/Button";
-import EditPersonDialog from "../EditPersonDialog/EditPersonDialog";
+import EditPersonDialog from "./EditPersonDialog";
 import { withFirebase } from "../Firebase";
 import { withAuthorization } from "../Session";
 
