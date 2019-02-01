@@ -38,7 +38,9 @@ class Firebase {
 
     activities = uid => this.db.ref(`users/${uid}/activities`);
 
-    people = pid => this.db.ref(`people/${pid}`);
+    activity = (uid, aid) => this.db.ref(`users/${uid}/activities/${aid}`);
+
+    people = (uid, aid) => this.db.ref(`users/${uid}/activities/${aid}/people`);
 
     bills = bid => this.db.ref(`bills/${bid}`);
 }

@@ -35,7 +35,33 @@ class EditBillDialog extends Component {
     };
 
     handleSave = () => {
-        this.props.onClose(this.state.bill);
+        const { bill } = this.state;
+        console.log("handleSave", bill);
+
+        if (this.props.selectedActivityUid) {
+            this.props.firebase
+                .activities(this.props.userId)
+                .child(this.props.selectedActivityUid)
+                .set(bill)
+                .then(thing => {
+                    console.log("updated activity!", thing.key);
+                })
+                .catch(error => {
+                    this.setState({ error });
+                });
+        } else {
+            this.props.firebase
+                .activities(this.props.userId)
+                .push(bill)
+                .then(thing => {
+                    console.log("pushed activity!", thing.key);
+                })
+                .catch(error => {
+                    this.setState({ error });
+                });
+        }
+
+        this.props.onClose(null);
     };
 
     handleDelete = () => {

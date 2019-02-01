@@ -14,17 +14,17 @@ class EditActivityDialog extends Component {
     };
 
     handleCancel = () => {
-        this.props.handleActivitySaved(null);
+        this.props.handleClose();
     };
 
     handleSave = () => {
         const { activity } = this.state;
         console.log("handleSave", activity);
 
-        if (activity.uid) {
+        if (this.props.selectedActivityUid) {
             this.props.firebase
                 .activities(this.props.userId)
-                .child(activity.uid)
+                .child(this.props.selectedActivityUid)
                 .set(activity)
                 .then(thing => {
                     console.log("updated activity!", thing.key);
@@ -44,11 +44,7 @@ class EditActivityDialog extends Component {
                 });
         }
 
-        this.props.handleActivitySaved(this.state.activity);
-    };
-
-    handleDelete = () => {
-        this.props.handleDelete(this.state.activity);
+        this.props.handleClose();
     };
 
     onNameChanged = event => {
@@ -65,7 +61,7 @@ class EditActivityDialog extends Component {
 
     render() {
         const { activity } = this.state;
-        const { index, open } = this.props;
+        const { open } = this.props;
         const error = !activity.name;
 
         return (
@@ -92,12 +88,6 @@ class EditActivityDialog extends Component {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    {index !== -1 ? (
-                        <Button onClick={this.handleDelete} color="secondary">
-                            Delete
-                        </Button>
-                    ) : null}
-
                     <Button onClick={this.handleCancel} color="default">
                         Cancel
                     </Button>

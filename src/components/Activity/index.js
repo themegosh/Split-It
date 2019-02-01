@@ -32,60 +32,37 @@ class Activity extends Component {
     };
 
     componentWillUnmount() {
-        this.props.firebase.people().off();
-        this.props.firebase.bills().off();
+        this.props.firebase.activity().off();
     }
 
     componentDidMount() {
-        console.log("props", this.props.match.params.id);
-        this.setState(
-            this.processActivity(this.state.bills, this.state.people)
-        );
+        const activityId = this.props.match.params.id;
+        const userId = this.props.authUser.uid;
+        console.log("activityId", activityId);
+        // this.setState(
+        //     this.processActivity(this.state.bills, this.state.people)
+        // );
 
-        console.log("authUser", this.props.authUser.uid);
+        console.log("authUser", userId);
 
         this.setState({ loading: true });
 
         this.props.firebase
-            .people(this.props.authUser.uid)
+            .activity(userId, activityId)
             .on("value", snapshot => {
-                const personObj = snapshot.val();
+                const activity = snapshot.val();
 
-                let people = [];
+                console.log("activity", activity);
 
-                if (personObj) {
-                    console.log("personObj", personObj);
-                    people = Object.keys(personObj).map(key => ({
-                        ...personObj[key],
-                        uid: key
-                    }));
-
-                    console.log("bills", people);
-                }
+                const bills = activity.bills || [];
+                const people = activity.people || [];
 
                 this.setState({
-                    people: people,
+                    bills,
+                    people,
                     loading: false
                 });
             });
-
-        this.props.firebase.bills().on("value", snapshot => {
-            const billObj = snapshot.val();
-
-            let bills = [];
-            if (billObj) {
-                bills = Object.keys(billObj).map(key => ({
-                    ...billObj[key],
-                    uid: key
-                }));
-
-                console.log("bills", bills);
-            }
-            this.setState({
-                bills: bills,
-                loading: false
-            });
-        });
     }
 
     isBillOwedBy(people, bill, name) {
@@ -96,65 +73,6 @@ class Activity extends Component {
         }
         return false;
     }
-
-    handleBillUpdated = (index, aBill) => {
-        console.log("handleBillUpdated", aBill, index);
-        //shallow copy
-        let bills = [...this.state.bills];
-
-        if (index === -1) {
-            //adding
-            bills.push(aBill);
-        } else {
-            //updating
-            bills[index] = aBill;
-        }
-
-        this.setState(this.processActivity(bills, this.state.people));
-    };
-
-    handleBillDeleted = index => {
-        console.log("handleBillDeleted", index);
-        //shallow copy
-        let bills = [...this.state.bills];
-
-        bills.splice(index, 1);
-
-        this.setState(this.processActivity(bills, this.state.people));
-    };
-
-    handlePersonUpdated = (index, aPerson) => {
-        console.log(
-            "handlePersonUpdated",
-            aPerson,
-            index,
-            this.props.authUser.uid
-        );
-        //shallow copy
-        let people = [...this.state.people];
-
-        if (index === -1) {
-            //adding
-            people.push(aPerson);
-        } else {
-            //updating
-            people[index] = aPerson;
-        }
-
-        this.props.firebase.people(this.props.authUser.uid).set(people);
-
-        this.setState(this.processActivity(this.state.bills, people));
-    };
-
-    handlePersonDeleted = index => {
-        console.log("handlePersonDeleted", index);
-        //shallow copy
-        let people = [...this.state.people];
-
-        people.splice(index, 1);
-
-        this.setState(this.processActivity(this.state.bills, people));
-    };
 
     processActivity(bills, people) {
         let totalCostsPaid = 0;
@@ -200,6 +118,7 @@ class Activity extends Component {
 
     render() {
         const { bills, totalCostsPaid, totalCostsOwed, people } = this.state;
+        const activityId = this.props.match.params.id;
 
         return (
             <div className="activities">
@@ -208,16 +127,12 @@ class Activity extends Component {
                     <div>totalCostsOwed {totalCostsOwed}</div>
                 </div>
                 <div className="middle-wrapper">
-                    <PeopleList
-                        people={people}
-                        handlePersonUpdated={this.handlePersonUpdated}
-                    />
+                    <PeopleList people={people} activityId={activityId} />
                     <BillsList
                         bills={bills}
                         people={people}
-                        handleBillUpdated={this.handleBillUpdated}
-                        handleBillDeleted={this.handleBillDeleted}
                         handlePersonDeleted={this.handlePersonDeleted}
+                        activityId={activityId}
                     />
                 </div>
             </div>

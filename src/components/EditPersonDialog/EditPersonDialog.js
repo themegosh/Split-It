@@ -6,18 +6,45 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControl from "@material-ui/core/FormControl";
+import { withFirebase } from "../Firebase";
+import { withAuthorization } from "../Session";
 
 class EditPersonDialog extends Component {
     state = {
         person: this.props.person
     };
 
-    handleCancel = () => {
-        this.props.onClose(null);
-    };
-
     handleSave = () => {
-        this.props.onClose(this.state.person);
+        const { person } = this.state;
+        const { activityId, selectedUid, firebase } = this.props;
+        const userId = this.props.authUser.uid;
+
+        console.log("handleSave", selectedUid);
+
+        if (selectedUid) {
+            firebase
+                .people(userId, activityId)
+                .child(selectedUid)
+                .set(person)
+                .then(thing => {
+                    console.log("updated person!", thing.key);
+                })
+                .catch(error => {
+                    this.setState({ error });
+                });
+        } else {
+            firebase
+                .people(userId, activityId)
+                .push(person)
+                .then(thing => {
+                    console.log("pushed person!", thing.key);
+                })
+                .catch(error => {
+                    this.setState({ error });
+                });
+        }
+
+        this.props.handleClose();
     };
 
     handleDelete = () => {
@@ -32,13 +59,13 @@ class EditPersonDialog extends Component {
 
     onKeyPress = e => {
         if (e.key === "Enter") {
-            this.props.onClose(this.state.person);
+            this.handleSave();
         }
     };
 
     render() {
         const { person } = this.state;
-        const { index, open } = this.props;
+        const { open } = this.props;
         const error = !person.name;
 
         return (
@@ -65,13 +92,7 @@ class EditPersonDialog extends Component {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    {index !== -1 ? (
-                        <Button onClick={this.handleDelete} color="secondary">
-                            Delete
-                        </Button>
-                    ) : null}
-
-                    <Button onClick={this.handleCancel} color="default">
+                    <Button onClick={this.props.handleClose} color="default">
                         Cancel
                     </Button>
                     <Button
@@ -86,4 +107,6 @@ class EditPersonDialog extends Component {
     }
 }
 
-export default EditPersonDialog;
+const condition = authUser => !!authUser;
+
+export default withAuthorization(condition)(withFirebase(EditPersonDialog));

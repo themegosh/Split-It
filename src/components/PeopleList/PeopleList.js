@@ -3,61 +3,76 @@ import "./PeopleList.scss";
 import Person from "../Person/Person";
 import Button from "@material-ui/core/Button";
 import EditPersonDialog from "../EditPersonDialog/EditPersonDialog";
+import { withFirebase } from "../Firebase";
+import { withAuthorization } from "../Session";
 
 class PeopleList extends Component {
     state = {
         open: false,
-        selectedIndex: null
+        people: [],
+        selectedPeople: {},
+        selectedPeopleUid: null
     };
 
-    handleClickOpen = (index, person) => {
+    componentWillUnmount() {
+        this.props.firebase.people().off();
+    }
+
+    componentDidMount() {
+        const userId = this.props.authUser.uid;
+        const { activityId } = this.props;
+
+        this.setState({ loading: true });
+
+        this.props.firebase.people(userId, activityId).on("value", snapshot => {
+            const people = snapshot.val();
+
+            console.log("people", people);
+
+            this.setState({
+                people,
+                loading: false
+            });
+        });
+    }
+
+    handleClickOpen = uid => {
+        console.log("handleOpen", this.state);
+        const person = (uid && this.state.people[uid]) || {
+            name: ""
+        };
+
         this.setState({
             open: true,
             selectedPerson: person,
-            selectedIndex: index
+            selectedUid: uid
         });
     };
 
-    handleClose = aPerson => {
-        if (aPerson) {
-            this.props.handlePersonUpdated(this.state.selectedIndex, aPerson);
-        }
+    handleClose = () => {
         this.setState({ open: false });
     };
 
-    handleDelete = index => {
-        console.log("handleDelete", index);
-        this.props.handlePersonDeleted(index);
-        this.setState({ open: false });
-    };
-
-    btnNewPersonClicked = () => {
-        this.setState({
-            open: true,
-            selectedPerson: {
-                name: "",
-                totalCostsPaid: 0,
-                totalCostsOwed: 0,
-                difference: 0
-            },
-            selectedIndex: -1
-        });
-    };
+    // handleDelete = index => {
+    //     console.log("handleDelete", index);
+    //     this.props.handlePersonDeleted(index);
+    //     this.setState({ open: false });
+    // };
 
     render() {
-        const { people } = this.props;
-        const { open, selectedIndex, selectedPerson } = this.state;
+        const { people, activityId } = this.props;
+        const { open, selectedUid, selectedPerson } = this.state;
 
         let editDialog;
         if (open) {
             editDialog = (
                 <EditPersonDialog
                     open={this.state.open}
-                    onClose={this.handleClose}
-                    handleDelete={this.handleDelete}
+                    handleClose={this.handleClose}
                     person={selectedPerson}
-                    index={selectedIndex}
+                    selectedUid={selectedUid}
                     allPeople={people}
+                    activityId={activityId}
                 />
             );
         }
@@ -65,21 +80,21 @@ class PeopleList extends Component {
         return (
             <div className="people">
                 <h2>People</h2>
-                {people.map((person, key) => {
+                {Object.keys(people).map(uid => {
+                    const person = people[uid];
                     return (
                         <Person
                             person={person}
-                            key={key}
-                            index={key}
+                            key={uid}
                             handlePersonUpdated={this.handlePersonUpdated}
-                            handleClickOpen={this.handleClickOpen}
+                            handleClickOpen={() => this.handleClickOpen(uid)}
                         />
                     );
                 })}
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={this.btnNewPersonClicked}>
+                    onClick={() => this.handleClickOpen(null)}>
                     Add Person
                 </Button>
                 {editDialog}
@@ -88,4 +103,6 @@ class PeopleList extends Component {
     }
 }
 
-export default PeopleList;
+const condition = authUser => !!authUser;
+
+export default withAuthorization(condition)(withFirebase(PeopleList));

@@ -17,7 +17,6 @@ class Bill extends Component {
                         <div className="cost-wrapper">
                             <div className="cost"> ${bill.cost}</div>
                             <div className="split-cost">
-                                {" "}
                                 (${bill.splitCost} each)
                             </div>
                         </div>

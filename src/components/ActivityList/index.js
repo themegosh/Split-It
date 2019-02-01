@@ -16,6 +16,7 @@ class ActivityList extends Component {
     state = {
         open: false,
         selectedActivity: {},
+        selectedActivityUid: null,
         activities: []
     };
 
@@ -39,20 +40,8 @@ class ActivityList extends Component {
                 });
             });
     }
-    handleActivitySaved = anActivity => {
-        // if (anActivity) {
-        //     console.log("handleActivitySaved", anActivity);
-        //     //shallow copy
-        //     let activities = [...this.state.activities];
 
-        //     if (index === -1) {
-        //         //adding
-        //         activities.push(anActivity);
-        //     } else {
-        //         //updating
-        //         activities[index] = anActivity;
-        //     }
-        // }
+    handleClose = anActivity => {
         this.setState({ open: false });
     };
 
@@ -65,23 +54,30 @@ class ActivityList extends Component {
 
         this.setState({
             open: true,
-            selectedActivity: activity
+            selectedActivity: activity,
+            selectedActivityUid: uid
         });
     };
-    btnOpenActivity = uid => {};
-    handleBillDeleted = index => {
-        console.log("handleBillDeleted", index);
-        //shallow copy
-        let bills = [...this.state.bills];
 
-        bills.splice(index, 1);
-    };
+    // btnDeleteActivity = uid => {
+    //     this.props.firebase
+    //         .activities(this.props.authUser.uid)
+    //         .on("value", snapshot => {
+    //             const activities = snapshot.val();
+
+    //             this.setState({
+    //                 activities,
+    //                 loading: false
+    //             });
+    //         });
+    // };
+
     render() {
         const {
             activities,
             open,
             selectedActivity,
-            selectedIndex
+            selectedActivityUid
         } = this.state;
         const userId = this.props.authUser.uid;
 
@@ -90,11 +86,11 @@ class ActivityList extends Component {
             editDialog = (
                 <EditActivityDialog
                     open={open}
-                    handleActivitySaved={this.handleActivitySaved}
+                    handleClose={this.handleClose}
                     handleDelete={this.handleDelete}
                     activity={selectedActivity}
-                    index={selectedIndex}
                     userId={userId}
+                    selectedActivityUid={selectedActivityUid}
                 />
             );
         }
@@ -135,6 +131,14 @@ class ActivityList extends Component {
                                             this.btnEditActivity(uid)
                                         }>
                                         Rename
+                                    </Button>
+                                    <Button
+                                        onClick={() =>
+                                            this.btnDeleteActivity(uid)
+                                        }
+                                        color="secondary"
+                                        size="small">
+                                        Delete
                                     </Button>
                                 </CardActions>
                             </Card>
