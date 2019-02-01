@@ -52,7 +52,7 @@ class ActivityList extends Component {
             });
     }
 
-    handleClose = anActivity => {
+    handleClose = () => {
         this.setState({ open: false });
     };
 
@@ -70,18 +70,12 @@ class ActivityList extends Component {
         });
     };
 
-    // btnDeleteActivity = uid => {
-    //     this.props.firebase
-    //         .activities(this.props.authUser.uid)
-    //         .on("value", snapshot => {
-    //             const activities = snapshot.val();
-
-    //             this.setState({
-    //                 activities,
-    //                 loading: false
-    //             });
-    //         });
-    // };
+    btnDeleteActivity = uid => {
+        this.props.firebase
+            .activities(this.props.authUser.uid)
+            .child(uid)
+            .remove();
+    };
 
     render() {
         const {
@@ -107,25 +101,26 @@ class ActivityList extends Component {
         }
 
         return (
-            <div className="activities">
-                <h1>Activites!</h1>
+            <div className="activity-list">
+                <h1>Activites</h1>
+                <h3>Collections of bills to split with people</h3>
                 {Object.keys(activities).map(uid => {
                     const activity = activities[uid];
                     return (
                         <div key={uid}>
                             <Card>
-                                <CardActionArea>
-                                    <CardContent>
-                                        <Link to={`${ROUTES.ACTIVITY}/${uid}`}>
+                                <Link to={`${ROUTES.ACTIVITY}/${uid}`}>
+                                    <CardActionArea>
+                                        <CardContent>
                                             <Typography
                                                 gutterBottom
                                                 variant="h5"
                                                 component="h2">
                                                 {activity.name}
                                             </Typography>
-                                        </Link>
-                                    </CardContent>
-                                </CardActionArea>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Link>
                                 <CardActions>
                                     <Button
                                         size="small"

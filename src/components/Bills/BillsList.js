@@ -63,6 +63,7 @@ class BillsList extends Component {
     render() {
         const { bills, people, activityId } = this.props;
         const { selectedBill, selectedBillId, open } = this.state;
+        const disablebtnAdd = !Object.keys(people).length;
 
         let editDialog;
         if (this.state.open) {
@@ -96,7 +97,8 @@ class BillsList extends Component {
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => this.handleClickOpen()}>
+                    onClick={() => this.handleClickOpen()}
+                    disabled={disablebtnAdd}>
                     New Bill
                 </Button>
                 {editDialog}

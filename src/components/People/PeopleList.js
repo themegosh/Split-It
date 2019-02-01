@@ -27,8 +27,6 @@ class PeopleList extends Component {
         this.props.firebase.people(userId, activityId).on("value", snapshot => {
             const people = snapshot.val();
 
-            console.log("people", people);
-
             this.setState({
                 people,
                 loading: false
@@ -37,8 +35,6 @@ class PeopleList extends Component {
     }
 
     handleClickOpen = uid => {
-        console.log("handleOpen", this.state);
-
         const person = (uid && this.state.people[uid]) || {
             name: ""
         };

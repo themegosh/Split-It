@@ -7,25 +7,9 @@ import { withAuthorization } from "../Session";
 
 class Activity extends Component {
     state = {
-        bills: [
-            // {
-            //     name: "Hotel",
-            //     cost: 300.51,
-            //     payer: 1,
-            //     paidFor: [0, 1, 2],
-            //     splitCost: 0
-            // },
-            // {
-            //     name: "Car Rental",
-            //     cost: 100.45,
-            //     payer: 2,
-            //     paidFor: [0, 2],
-            //     splitCost: 0
-            // }
-        ],
-        people: [
-            // { name: "Bob" }, { name: "Joe" }, { name: "Mike" }
-        ],
+        name: "",
+        bills: [],
+        people: [],
         totalCostsPaid: 0,
         totalCostsOwed: 0,
         editBillOpen: false
@@ -56,6 +40,7 @@ class Activity extends Component {
                 const processedActivity = this.processActivity(bills, people);
 
                 this.setState({
+                    name: activity.name,
                     bills: processedActivity.bills,
                     people: processedActivity.people,
                     totalCostsPaid: processedActivity.totalCostsPaid,
@@ -78,13 +63,9 @@ class Activity extends Component {
         let totalCostsPaid = 0;
         let totalCostsOwed = 0;
 
-        console.log("process", bills);
-
         //find bill cost per person
         Object.keys(bills).forEach(billId => {
-            console.log("foreach", billId);
             const bill = bills[billId];
-            console.log("bill.paidFor", bill.paidFor);
             bill.splitCost = bill.cost / bill.paidFor.length;
             totalCostsPaid += bill.cost;
             totalCostsOwed += bill.cost;
@@ -93,6 +74,7 @@ class Activity extends Component {
         //find person's paid and owed totals
         Object.keys(people).forEach(personId => {
             const person = people[personId];
+
             person.totalCostsPaid = 0;
             person.totalCostsOwed = 0;
             person.difference = 0;
@@ -114,8 +96,6 @@ class Activity extends Component {
             person.difference = person.totalCostsPaid - person.totalCostsOwed;
         });
 
-        console.log("end of processActivity", bills, people);
-
         return {
             totalCostsOwed,
             totalCostsPaid,
@@ -130,11 +110,10 @@ class Activity extends Component {
             totalCostsPaid,
             totalCostsOwed,
             people,
-            loading
+            loading,
+            name
         } = this.state;
         const activityId = this.props.match.params.id;
-
-        console.log("activityId", activityId);
 
         return (
             <div className="activities">
@@ -142,9 +121,10 @@ class Activity extends Component {
                     <div>Loading...</div>
                 ) : (
                     <div>
+                        <h2>{name}</h2>
                         <div className="activities-summary">
-                            <div>totalCostsPaid {totalCostsPaid}</div>
-                            <div>totalCostsOwed {totalCostsOwed}</div>
+                            <div>Total Costs Paid: {totalCostsPaid}</div>
+                            <div>total Costs Owed: {totalCostsOwed}</div>
                         </div>
                         <div className="middle-wrapper">
                             <PeopleList

@@ -61,7 +61,7 @@ class EditActivityDialog extends Component {
 
     render() {
         const { activity } = this.state;
-        const { open } = this.props;
+        const { open, selectedActivityUid } = this.props;
         const error = !activity.name;
 
         return (
@@ -70,7 +70,9 @@ class EditActivityDialog extends Component {
                 onClose={this.handleCancel}
                 aria-labelledby="form-dialog-title"
                 onKeyPress={this.onKeyPress}>
-                <DialogTitle id="form-dialog-title">Edit Activity</DialogTitle>
+                <DialogTitle id="form-dialog-title">
+                    {selectedActivityUid ? "Edit" : "New"} Activity
+                </DialogTitle>
                 <DialogContent>
                     <FormControl required fullWidth>
                         <TextField

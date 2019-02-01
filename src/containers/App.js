@@ -6,7 +6,6 @@ import SignUpPage from "./SignUpPage";
 import SignInPage from "./SignInPage";
 import PasswordForgetPage from "./PasswordForgetPage";
 import AccountPage from "./AccountPage";
-import AdminPage from "./AdminPage";
 import ActivityPage from "../components/Activity/Activity";
 import ActivityListPage from "../components/Activity/ActivityList";
 
@@ -18,9 +17,6 @@ import "./App.scss";
 const App = () => (
     <Router>
         <div>
-            {/* <header className="header">
-                <h1>Split It</h1>
-            </header> */}
             <Navigation />
 
             <Route exact path={ROUTES.HOME} component={ActivityListPage} />
@@ -36,7 +32,6 @@ const App = () => (
                 component={PasswordForgetPage}
             />
             <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-            <Route path={ROUTES.ADMIN} component={AdminPage} />
         </div>
     </Router>
 );
