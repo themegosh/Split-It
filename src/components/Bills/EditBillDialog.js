@@ -45,25 +45,23 @@ class EditBillDialog extends Component {
             firebase
                 .bills(userId, activityId)
                 .child(billId)
-                .set(bill)
-                .then(thing => {
-                    console.log("updated activity!", thing.key);
-                    this.props.onClose();
-                })
-                .catch(error => {
-                    this.setState({ error });
+                .set(bill, error => {
+                    if (error) {
+                        this.setState({ error });
+                    } else {
+                        console.log("updated bill!");
+                        this.props.onClose();
+                    }
                 });
         } else {
-            firebase
-                .bills(userId, activityId)
-                .push(bill)
-                .then(thing => {
-                    console.log("pushed activity!", thing.key);
-                    this.props.onClose();
-                })
-                .catch(error => {
+            firebase.bills(userId, activityId).push(bill, error => {
+                if (error) {
                     this.setState({ error });
-                });
+                } else {
+                    console.log("pushed bill!");
+                    this.props.onClose();
+                }
+            });
         }
     };
 

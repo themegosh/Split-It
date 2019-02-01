@@ -4,7 +4,6 @@ import Person from "./Person";
 import Button from "@material-ui/core/Button";
 import EditPersonDialog from "./EditPersonDialog";
 import { withFirebase } from "../Firebase";
-import { withAuthorization } from "../Session";
 
 class PeopleList extends Component {
     state = {
@@ -19,6 +18,7 @@ class PeopleList extends Component {
     }
 
     componentDidMount() {
+        console.log("PeopleList componentDidMount");
         const userId = this.props.authUser.uid;
         const { activityId } = this.props;
 
@@ -100,6 +100,4 @@ class PeopleList extends Component {
     }
 }
 
-const condition = authUser => !!authUser;
-
-export default withAuthorization(condition)(withFirebase(PeopleList));
+export default withFirebase(PeopleList);

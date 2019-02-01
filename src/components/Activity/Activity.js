@@ -5,6 +5,9 @@ import PeopleList from "../People/PeopleList";
 import { withFirebase } from "../Firebase";
 import { withAuthorization } from "../Session";
 
+import { withRouter } from "react-router-dom";
+import * as ROUTES from "../../constants/routes";
+
 class Activity extends Component {
     state = {
         name: "",
@@ -26,6 +29,11 @@ class Activity extends Component {
             .activity(this.props.authUser.uid, this.props.match.params.id)
             .on("value", snapshot => {
                 const activity = snapshot.val();
+
+                if (!activity) {
+                    this.props.history.push(ROUTES.HOME);
+                    return;
+                }
 
                 console.log(
                     "onActivity changes",
@@ -113,6 +121,9 @@ class Activity extends Component {
             loading,
             name
         } = this.state;
+
+        const { authUser } = this.props;
+
         const activityId = this.props.match.params.id;
 
         return (
@@ -130,11 +141,13 @@ class Activity extends Component {
                             <PeopleList
                                 people={people}
                                 activityId={activityId}
+                                authUser={authUser}
                             />
                             <BillsList
                                 bills={bills}
                                 people={people}
                                 activityId={activityId}
+                                authUser={authUser}
                             />
                         </div>
                     </div>
@@ -146,4 +159,4 @@ class Activity extends Component {
 
 const condition = authUser => !!authUser;
 
-export default withAuthorization(condition)(withFirebase(Activity));
+export default withRouter(withAuthorization(condition)(withFirebase(Activity)));

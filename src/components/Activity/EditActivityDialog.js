@@ -25,24 +25,24 @@ class EditActivityDialog extends Component {
             this.props.firebase
                 .activities(this.props.userId)
                 .child(this.props.selectedActivityUid)
-                .set(activity)
-                .then(thing => {
-                    console.log("updated activity!", thing.key);
-                    this.props.handleClose();
-                })
-                .catch(error => {
-                    this.setState({ error });
+                .set(activity, error => {
+                    if (error) {
+                        this.setState({ error });
+                    } else {
+                        console.log("updated activity!");
+                        this.props.handleClose();
+                    }
                 });
         } else {
             this.props.firebase
                 .activities(this.props.userId)
-                .push(activity)
-                .then(thing => {
-                    console.log("pushed activity!", thing.key);
-                    this.props.handleClose();
-                })
-                .catch(error => {
-                    this.setState({ error });
+                .push(activity, error => {
+                    if (error) {
+                        this.setState({ error });
+                    } else {
+                        console.log("pushed activity!");
+                        this.props.handleClose();
+                    }
                 });
         }
     };

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
 import { withFirebase } from "../Firebase";
-import { withAuthorization } from "../Session";
 
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
@@ -12,8 +11,8 @@ import Typography from "@material-ui/core/Typography";
 
 import EditActivityDialog from "./EditActivityDialog";
 
-import { Link } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
+import { withRouter } from "react-router-dom";
 
 import "./ActivityList.scss";
 
@@ -70,11 +69,15 @@ class ActivityList extends Component {
         });
     };
 
-    btnDeleteActivity = uid => {
+    btnDeleteActivity = activityId => {
         this.props.firebase
             .activities(this.props.authUser.uid)
-            .child(uid)
+            .child(activityId)
             .remove();
+    };
+
+    btnGoToActivity = activityId => {
+        this.props.history.push(`${ROUTES.ACTIVITY}/${activityId}`);
     };
 
     render() {
@@ -109,7 +112,7 @@ class ActivityList extends Component {
                     return (
                         <div key={uid}>
                             <Card>
-                                <Link to={`${ROUTES.ACTIVITY}/${uid}`}>
+                                <div onClick={() => this.btnGoToActivity(uid)}>
                                     <CardActionArea>
                                         <CardContent>
                                             <Typography
@@ -120,16 +123,8 @@ class ActivityList extends Component {
                                             </Typography>
                                         </CardContent>
                                     </CardActionArea>
-                                </Link>
+                                </div>
                                 <CardActions>
-                                    <Button
-                                        size="small"
-                                        color="primary"
-                                        onClick={() =>
-                                            this.btnOpenActivity(uid)
-                                        }>
-                                        View
-                                    </Button>
                                     <Button
                                         size="small"
                                         color="primary"
@@ -164,6 +159,4 @@ class ActivityList extends Component {
     }
 }
 
-const condition = authUser => !!authUser;
-
-export default withAuthorization(condition)(withFirebase(ActivityList));
+export default withRouter(withFirebase(ActivityList));

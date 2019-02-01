@@ -25,25 +25,23 @@ class EditPersonDialog extends Component {
             firebase
                 .people(userId, activityId)
                 .child(personId)
-                .set(person)
-                .then(thing => {
-                    console.log("updated person!", thing.key);
-                    this.props.handleClose();
-                })
-                .catch(error => {
-                    this.setState({ error });
+                .set(person, error => {
+                    if (error) {
+                        this.setState({ error });
+                    } else {
+                        console.log("updated person!");
+                        this.props.handleClose();
+                    }
                 });
         } else {
-            firebase
-                .people(userId, activityId)
-                .push(person)
-                .then(thing => {
-                    console.log("pushed person!", thing.key);
-                    this.props.handleClose();
-                })
-                .catch(error => {
+            firebase.people(userId, activityId).push(person, error => {
+                if (error) {
                     this.setState({ error });
-                });
+                } else {
+                    console.log("pushed person!");
+                    this.props.handleClose();
+                }
+            });
         }
     };
 

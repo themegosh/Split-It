@@ -4,7 +4,6 @@ import EditBillDialog from "./EditBillDialog";
 import Bill from "./Bill";
 import Button from "@material-ui/core/Button";
 import { withFirebase } from "../Firebase";
-import { withAuthorization } from "../Session";
 
 class BillsList extends Component {
     state = {
@@ -107,6 +106,4 @@ class BillsList extends Component {
     }
 }
 
-const condition = authUser => !!authUser;
-
-export default withAuthorization(condition)(withFirebase(BillsList));
+export default withFirebase(BillsList);
