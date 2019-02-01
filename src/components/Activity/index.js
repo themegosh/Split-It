@@ -36,38 +36,38 @@ class Activity extends Component {
     }
 
     componentDidMount() {
-        const activityId = this.props.match.params.id;
-        const userId = this.props.authUser.uid;
-        console.log("activityId", activityId);
-        // this.setState(
-        //     this.processActivity(this.state.bills, this.state.people)
-        // );
-
-        console.log("authUser", userId);
-
         this.setState({ loading: true });
 
         this.props.firebase
-            .activity(userId, activityId)
+            .activity(this.props.authUser.uid, this.props.match.params.id)
             .on("value", snapshot => {
                 const activity = snapshot.val();
 
-                console.log("activity", activity);
+                console.log(
+                    "onActivity changes",
+                    this.props.authUser.uid,
+                    this.props.match.params.id,
+                    activity
+                );
 
                 const bills = activity.bills || [];
                 const people = activity.people || [];
 
+                const processedActivity = this.processActivity(bills, people);
+
                 this.setState({
-                    bills,
-                    people,
+                    bills: processedActivity.bills,
+                    people: processedActivity.people,
+                    totalCostsPaid: processedActivity.totalCostsPaid,
+                    totalCostsOwed: processedActivity.totalCostsOwed,
                     loading: false
                 });
             });
     }
 
-    isBillOwedBy(people, bill, name) {
+    isBillOwedBy(people, bill, personId) {
         for (var i = 0; i < bill.paidFor.length; i++) {
-            if (name === people[bill.paidFor[i]].name) {
+            if (personId === bill.paidFor[i]) {
                 return true;
             }
         }
@@ -78,31 +78,39 @@ class Activity extends Component {
         let totalCostsPaid = 0;
         let totalCostsOwed = 0;
 
+        console.log("process", bills);
+
         //find bill cost per person
-        bills.forEach(bill => {
+        Object.keys(bills).forEach(billId => {
+            console.log("foreach", billId);
+            const bill = bills[billId];
+            console.log("bill.paidFor", bill.paidFor);
             bill.splitCost = bill.cost / bill.paidFor.length;
             totalCostsPaid += bill.cost;
             totalCostsOwed += bill.cost;
         });
 
         //find person's paid and owed totals
-        people.forEach(person => {
+        Object.keys(people).forEach(personId => {
+            const person = people[personId];
             person.totalCostsPaid = 0;
             person.totalCostsOwed = 0;
             person.difference = 0;
 
-            bills.forEach(bill => {
+            Object.keys(bills).forEach(billId => {
+                const bill = bills[billId];
                 if (people[bill.payer].name === person.name) {
                     person.totalCostsPaid += bill.cost;
                 }
-                if (this.isBillOwedBy(people, bill, person.name)) {
+                if (this.isBillOwedBy(people, bill, personId)) {
                     person.totalCostsOwed += bill.splitCost;
                 }
             });
         });
 
         //person's difference
-        people.forEach(person => {
+        Object.keys(people).forEach(uid => {
+            const person = people[uid];
             person.difference = person.totalCostsPaid - person.totalCostsOwed;
         });
 
@@ -117,24 +125,40 @@ class Activity extends Component {
     }
 
     render() {
-        const { bills, totalCostsPaid, totalCostsOwed, people } = this.state;
+        const {
+            bills,
+            totalCostsPaid,
+            totalCostsOwed,
+            people,
+            loading
+        } = this.state;
         const activityId = this.props.match.params.id;
+
+        console.log("activityId", activityId);
 
         return (
             <div className="activities">
-                <div className="activities-summary">
-                    <div>totalCostsPaid {totalCostsPaid}</div>
-                    <div>totalCostsOwed {totalCostsOwed}</div>
-                </div>
-                <div className="middle-wrapper">
-                    <PeopleList people={people} activityId={activityId} />
-                    <BillsList
-                        bills={bills}
-                        people={people}
-                        handlePersonDeleted={this.handlePersonDeleted}
-                        activityId={activityId}
-                    />
-                </div>
+                {loading ? (
+                    <div>Loading...</div>
+                ) : (
+                    <div>
+                        <div className="activities-summary">
+                            <div>totalCostsPaid {totalCostsPaid}</div>
+                            <div>totalCostsOwed {totalCostsOwed}</div>
+                        </div>
+                        <div className="middle-wrapper">
+                            <PeopleList
+                                people={people}
+                                activityId={activityId}
+                            />
+                            <BillsList
+                                bills={bills}
+                                people={people}
+                                activityId={activityId}
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }

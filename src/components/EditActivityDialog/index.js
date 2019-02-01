@@ -28,6 +28,7 @@ class EditActivityDialog extends Component {
                 .set(activity)
                 .then(thing => {
                     console.log("updated activity!", thing.key);
+                    this.props.handleClose();
                 })
                 .catch(error => {
                     this.setState({ error });
@@ -38,13 +39,12 @@ class EditActivityDialog extends Component {
                 .push(activity)
                 .then(thing => {
                     console.log("pushed activity!", thing.key);
+                    this.props.handleClose();
                 })
                 .catch(error => {
                     this.setState({ error });
                 });
         }
-
-        this.props.handleClose();
     };
 
     onNameChanged = event => {

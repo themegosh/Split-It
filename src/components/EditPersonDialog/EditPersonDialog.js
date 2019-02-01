@@ -16,18 +16,19 @@ class EditPersonDialog extends Component {
 
     handleSave = () => {
         const { person } = this.state;
-        const { activityId, selectedUid, firebase } = this.props;
+        const { activityId, personId, firebase } = this.props;
         const userId = this.props.authUser.uid;
 
-        console.log("handleSave", selectedUid);
+        console.log("handleSave", personId);
 
-        if (selectedUid) {
+        if (personId) {
             firebase
                 .people(userId, activityId)
-                .child(selectedUid)
+                .child(personId)
                 .set(person)
                 .then(thing => {
                     console.log("updated person!", thing.key);
+                    this.props.handleClose();
                 })
                 .catch(error => {
                     this.setState({ error });
@@ -38,13 +39,12 @@ class EditPersonDialog extends Component {
                 .push(person)
                 .then(thing => {
                     console.log("pushed person!", thing.key);
+                    this.props.handleClose();
                 })
                 .catch(error => {
                     this.setState({ error });
                 });
         }
-
-        this.props.handleClose();
     };
 
     handleDelete = () => {
@@ -71,7 +71,7 @@ class EditPersonDialog extends Component {
         return (
             <Dialog
                 open={open}
-                onClose={this.handleCancel}
+                onClose={this.props.handleClose}
                 aria-labelledby="form-dialog-title"
                 onKeyPress={this.onKeyPress}>
                 <DialogTitle id="form-dialog-title">Edit Person</DialogTitle>

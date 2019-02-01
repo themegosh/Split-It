@@ -32,7 +32,13 @@ class ActivityList extends Component {
         this.props.firebase
             .activities(this.props.authUser.uid)
             .on("value", snapshot => {
-                const activities = snapshot.val();
+                const activities = snapshot.val() || [];
+
+                console.log(
+                    "onActivites changed",
+                    this.props.authUser.uid,
+                    activities
+                );
 
                 this.setState({
                     activities,

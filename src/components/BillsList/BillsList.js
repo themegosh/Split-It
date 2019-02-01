@@ -9,7 +9,9 @@ import { withAuthorization } from "../Session";
 class BillsList extends Component {
     state = {
         open: false,
-        selectedIndex: null
+        bills: [],
+        selectedBill: {},
+        selectedBillId: null
     };
 
     componentWillUnmount() {
@@ -17,34 +19,38 @@ class BillsList extends Component {
     }
 
     componentDidMount() {
-        console.log("authUser", this.props.authUser.uid);
+        const userId = this.props.authUser.uid;
+        const { activityId } = this.props;
 
         this.setState({ loading: true });
 
-        this.props.firebase
-            .bills(this.props.authUser.uid)
-            .on("value", snapshot => {
-                const bills = snapshot.val();
+        this.props.firebase.bills(userId, activityId).on("value", snapshot => {
+            const bills = snapshot.val();
 
-                this.setState({
-                    bills,
-                    loading: false
-                });
+            this.setState({
+                bills,
+                loading: false
             });
+        });
     }
 
-    handleClickOpen = (index, bill) => {
+    handleClickOpen = billId => {
+        console.log("handleOpen", billId, this.state.bills);
+
+        const bill = (billId && this.state.bills[billId]) || {
+            name: "",
+            paidFor: [],
+            payer: ""
+        };
+
         this.setState({
             open: true,
             selectedBill: bill,
-            selectedIndex: index
+            selectedBillId: billId
         });
     };
 
-    handleClose = aBill => {
-        if (aBill) {
-            this.props.handleBillUpdated(this.state.selectedIndex, aBill);
-        }
+    handleClose = () => {
         this.setState({ open: false });
     };
 
@@ -54,36 +60,20 @@ class BillsList extends Component {
         this.setState({ open: false });
     };
 
-    btnNewBillClicked = () => {
-        this.setState({
-            open: true,
-            selectedBill: {
-                name: "",
-                cost: 0,
-                payer: "",
-                paidFor: [],
-                splitCost: 0
-            },
-            selectedIndex: -1
-        });
-    };
-
     render() {
-        const { bills, people } = this.props;
-        const { selectedActivityUid } = this.state;
-        const userId = this.props.authUser.uid;
+        const { bills, people, activityId } = this.props;
+        const { selectedBill, selectedBillId, open } = this.state;
 
         let editDialog;
         if (this.state.open) {
             editDialog = (
                 <EditBillDialog
-                    open={this.state.open}
+                    open={open}
                     onClose={this.handleClose}
-                    handleDelete={this.handleDelete}
-                    bill={this.state.selectedBill}
-                    index={this.state.selectedIndex}
-                    selectedActivityUid={selectedActivityUid}
-                    allPeople={people}
+                    bill={selectedBill}
+                    billId={selectedBillId}
+                    people={people}
+                    activityId={activityId}
                 />
             );
         }
@@ -91,24 +81,22 @@ class BillsList extends Component {
         return (
             <div className="bills">
                 <h2>Bills</h2>
-                {bills.map((bill, key) => {
+                {Object.keys(bills).map(uid => {
+                    const bill = bills[uid];
                     return (
                         <Bill
+                            key={uid}
                             bill={bill}
-                            key={key}
-                            index={key}
+                            billId={uid}
+                            handleClickOpen={() => this.handleClickOpen(uid)}
                             people={people}
-                            handleBillUpdated={this.handleBillUpdated}
-                            handleClickOpen={this.handleClickOpen}
-                            userId={userId}
-                            selectedActivityUid={selectedActivityUid}
                         />
                     );
                 })}
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={this.btnNewBillClicked}>
+                    onClick={() => this.handleClickOpen()}>
                     New Bill
                 </Button>
                 {editDialog}

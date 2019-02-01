@@ -32,17 +32,20 @@ class Firebase {
     doPasswordUpdate = password =>
         this.auth.currentUser.updatePassword(password);
 
-    user = uid => this.db.ref(`users/${uid}`);
+    user = userId => this.db.ref(`users/${userId}`);
 
     users = () => this.db.ref("users");
 
-    activities = uid => this.db.ref(`users/${uid}/activities`);
+    activities = userId => this.db.ref(`users/${userId}/activities`);
 
-    activity = (uid, aid) => this.db.ref(`users/${uid}/activities/${aid}`);
+    activity = (userId, activityId) =>
+        this.db.ref(`users/${userId}/activities/${activityId}`);
 
-    people = (uid, aid) => this.db.ref(`users/${uid}/activities/${aid}/people`);
+    people = (userId, activityId) =>
+        this.db.ref(`users/${userId}/activities/${activityId}/people`);
 
-    bills = bid => this.db.ref(`bills/${bid}`);
+    bills = (userId, activityId) =>
+        this.db.ref(`users/${userId}/activities/${activityId}/bills`);
 }
 
 export default Firebase;

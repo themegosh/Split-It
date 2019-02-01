@@ -10,8 +10,8 @@ class PeopleList extends Component {
     state = {
         open: false,
         people: [],
-        selectedPeople: {},
-        selectedPeopleUid: null
+        selectedId: null,
+        selectedPerson: {}
     };
 
     componentWillUnmount() {
@@ -38,6 +38,7 @@ class PeopleList extends Component {
 
     handleClickOpen = uid => {
         console.log("handleOpen", this.state);
+
         const person = (uid && this.state.people[uid]) || {
             name: ""
         };
@@ -45,7 +46,7 @@ class PeopleList extends Component {
         this.setState({
             open: true,
             selectedPerson: person,
-            selectedUid: uid
+            selectedId: uid
         });
     };
 
@@ -61,7 +62,7 @@ class PeopleList extends Component {
 
     render() {
         const { people, activityId } = this.props;
-        const { open, selectedUid, selectedPerson } = this.state;
+        const { open, selectedId, selectedPerson } = this.state;
 
         let editDialog;
         if (open) {
@@ -70,7 +71,7 @@ class PeopleList extends Component {
                     open={this.state.open}
                     handleClose={this.handleClose}
                     person={selectedPerson}
-                    selectedUid={selectedUid}
+                    personId={selectedId}
                     allPeople={people}
                     activityId={activityId}
                 />
@@ -86,8 +87,8 @@ class PeopleList extends Component {
                         <Person
                             person={person}
                             key={uid}
-                            handlePersonUpdated={this.handlePersonUpdated}
                             handleClickOpen={() => this.handleClickOpen(uid)}
+                            personId={uid}
                         />
                     );
                 })}

@@ -13,15 +13,18 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import { withFirebase } from "../Firebase";
+import { withAuthorization } from "../Session";
 
 class EditBillDialog extends Component {
     constructor(props) {
         super();
 
-        let chkPeople = props.allPeople.map((person, key) => {
+        let chkPeople = Object.keys(props.people).map(uid => {
             return {
-                name: person.name,
-                checked: props.bill.paidFor.includes(key)
+                name: props.people[uid].name,
+                uid: uid,
+                checked: props.bill.paidFor.includes(uid)
             };
         });
 
@@ -30,38 +33,38 @@ class EditBillDialog extends Component {
             chkPeople
         };
     }
-    handleCancel = () => {
-        this.props.onClose(null);
-    };
 
     handleSave = () => {
         const { bill } = this.state;
-        console.log("handleSave", bill);
+        const { billId, firebase, activityId } = this.props;
+        const userId = this.props.authUser.uid;
 
-        if (this.props.selectedActivityUid) {
-            this.props.firebase
-                .activities(this.props.userId)
-                .child(this.props.selectedActivityUid)
+        console.log("handleSave", userId, activityId);
+
+        if (billId) {
+            firebase
+                .bills(userId, activityId)
+                .child(billId)
                 .set(bill)
                 .then(thing => {
                     console.log("updated activity!", thing.key);
+                    this.props.onClose();
                 })
                 .catch(error => {
                     this.setState({ error });
                 });
         } else {
-            this.props.firebase
-                .activities(this.props.userId)
+            firebase
+                .bills(userId, activityId)
                 .push(bill)
                 .then(thing => {
                     console.log("pushed activity!", thing.key);
+                    this.props.onClose();
                 })
                 .catch(error => {
                     this.setState({ error });
                 });
         }
-
-        this.props.onClose(null);
     };
 
     handleDelete = () => {
@@ -102,8 +105,8 @@ class EditBillDialog extends Component {
 
         bill.paidFor = chkPeople
             .filter(x => x.checked)
-            .map((person, key) => {
-                return key;
+            .map(person => {
+                return person.uid;
             });
 
         this.setState({ chkPeople, bill });
@@ -111,14 +114,14 @@ class EditBillDialog extends Component {
 
     render() {
         const { bill, chkPeople } = this.state;
-        const { allPeople, open, index } = this.props;
+        const { people, open } = this.props;
         const error =
             !bill.name || !bill.cost || !bill.payer || bill.paidFor.length < 1;
 
         return (
             <Dialog
                 open={open}
-                onClose={this.handleCancel}
+                onClose={this.props.onClose}
                 aria-labelledby="form-dialog-title"
                 onKeyPress={this.onKeyPress}>
                 <DialogTitle id="form-dialog-title">Edit Bill</DialogTitle>
@@ -160,9 +163,9 @@ class EditBillDialog extends Component {
                                 id: "bill.payer"
                             }}
                             error={!bill.payer}>
-                            {allPeople.map((person, key) => (
-                                <MenuItem key={key} value={key}>
-                                    {person.name}
+                            {Object.keys(people).map(uid => (
+                                <MenuItem key={uid} value={uid}>
+                                    {people[uid].name}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -195,13 +198,7 @@ class EditBillDialog extends Component {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    {index !== -1 ? (
-                        <Button onClick={this.handleDelete} color="secondary">
-                            Delete
-                        </Button>
-                    ) : null}
-
-                    <Button onClick={this.handleCancel} color="default">
+                    <Button onClick={this.props.onClose} color="default">
                         Cancel
                     </Button>
                     <Button
@@ -216,4 +213,6 @@ class EditBillDialog extends Component {
     }
 }
 
-export default EditBillDialog;
+const condition = authUser => !!authUser;
+
+export default withAuthorization(condition)(withFirebase(EditBillDialog));
