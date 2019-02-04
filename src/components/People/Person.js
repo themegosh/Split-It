@@ -20,31 +20,32 @@ class Person extends Component {
                 onClick={() =>
                     this.props.handleClickOpen(this.props.index, person)
                 }>
-                {/* <Avatar /> */}
-                <div className="header">
+                <div className="inner">
                     <PersonIcon name={person.name} />
-                    <h3 className="name">{person.name}</h3>
-                </div>
-                <div className="spend-wrapper">
-                    <Currency
-                        className="spend-value"
-                        quantity={person.totalCostsPaid}
-                    />
-                    <div className="spend-name">Paid</div>
-                </div>
-                <div className="spend-wrapper">
-                    <Currency
-                        className="spend-value"
-                        quantity={person.totalCostsOwed}
-                    />
-                    <div className="spend-name">Owed</div>
-                </div>
-                <div className="spend-wrapper">
-                    <Currency
-                        className="spend-value"
-                        quantity={person.difference}
-                    />
-                    <div className="spend-name">Balance</div>
+                    <div className="header">
+                        <h3 className="name">{person.name}</h3>
+                        <div className="spend-wrapper">
+                            Paid{" "}
+                            <Currency
+                                className="spend-value"
+                                quantity={person.totalCostsPaid}
+                            />
+                        </div>
+                        <div className="spend-wrapper">
+                            Owed{" "}
+                            <Currency
+                                className="spend-value"
+                                quantity={person.totalCostsOwed}
+                            />
+                        </div>
+                        <div className="spend-wrapper">
+                            Balance{" "}
+                            <Currency
+                                className="spend-value"
+                                quantity={person.difference}
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         );

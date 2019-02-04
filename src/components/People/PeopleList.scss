@@ -7,10 +7,7 @@
         align-items: flex-end;
 
         .person {
-            display: inline-block;
             flex-direction: column;
-            max-width: auto;
-            max-height: 300px;
         }
     }
 }

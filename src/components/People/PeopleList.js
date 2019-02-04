@@ -76,7 +76,15 @@ class PeopleList extends Component {
 
         return (
             <div className="people">
-                <h2>People</h2>
+                <h2>
+                    People
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => this.handleClickOpen(null)}>
+                        Add Person
+                    </Button>
+                </h2>
                 <div className="people-list">
                     {Object.keys(people).map(uid => {
                         const person = people[uid];
@@ -91,14 +99,8 @@ class PeopleList extends Component {
                             />
                         );
                     })}
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => this.handleClickOpen(null)}>
-                        Add Person
-                    </Button>
-                    {editDialog}
                 </div>
+                {editDialog}
             </div>
         );
     }
