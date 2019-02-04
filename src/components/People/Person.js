@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Currency from "react-currency-formatter";
+import PersonIcon from "./PersonIcon";
+
 import "./Person.scss";
 
 class Person extends Component {
@@ -16,12 +20,32 @@ class Person extends Component {
                 onClick={() =>
                     this.props.handleClickOpen(this.props.index, person)
                 }>
+                {/* <Avatar /> */}
                 <div className="header">
+                    <PersonIcon name={person.name} />
                     <h3 className="name">{person.name}</h3>
                 </div>
-                <div className="">totalCostsPaid {person.totalCostsPaid}</div>
-                <div className="">totalCostsOwed {person.totalCostsOwed}</div>
-                <div className="">difference {person.difference}</div>
+                <div className="spend-wrapper">
+                    <Currency
+                        className="spend-value"
+                        quantity={person.totalCostsPaid}
+                    />
+                    <div className="spend-name">Paid</div>
+                </div>
+                <div className="spend-wrapper">
+                    <Currency
+                        className="spend-value"
+                        quantity={person.totalCostsOwed}
+                    />
+                    <div className="spend-name">Owed</div>
+                </div>
+                <div className="spend-wrapper">
+                    <Currency
+                        className="spend-value"
+                        quantity={person.difference}
+                    />
+                    <div className="spend-name">Balance</div>
+                </div>
             </div>
         );
     }

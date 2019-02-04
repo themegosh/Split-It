@@ -77,24 +77,28 @@ class PeopleList extends Component {
         return (
             <div className="people">
                 <h2>People</h2>
-                {Object.keys(people).map(uid => {
-                    const person = people[uid];
-                    return (
-                        <Person
-                            person={person}
-                            key={uid}
-                            handleClickOpen={() => this.handleClickOpen(uid)}
-                            personId={uid}
-                        />
-                    );
-                })}
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => this.handleClickOpen(null)}>
-                    Add Person
-                </Button>
-                {editDialog}
+                <div className="people-list">
+                    {Object.keys(people).map(uid => {
+                        const person = people[uid];
+                        return (
+                            <Person
+                                person={person}
+                                key={uid}
+                                handleClickOpen={() =>
+                                    this.handleClickOpen(uid)
+                                }
+                                personId={uid}
+                            />
+                        );
+                    })}
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => this.handleClickOpen(null)}>
+                        Add Person
+                    </Button>
+                    {editDialog}
+                </div>
             </div>
         );
     }

@@ -7,6 +7,7 @@ import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
+import { withAuthorization } from "../Session";
 import Typography from "@material-ui/core/Typography";
 
 import EditActivityDialog from "./EditActivityDialog";
@@ -29,6 +30,9 @@ class ActivityList extends Component {
     }
 
     componentDidMount() {
+        if (!this.props.authUser) {
+            return;
+        }
         console.log("authUser", this.props.authUser.uid);
 
         this.setState({ loading: true });
@@ -87,7 +91,7 @@ class ActivityList extends Component {
             selectedActivity,
             selectedActivityUid
         } = this.state;
-        const userId = this.props.authUser.uid;
+        const userId = this.props.authUser && this.props.authUser.uid;
 
         let editDialog;
         if (open) {
@@ -159,4 +163,8 @@ class ActivityList extends Component {
     }
 }
 
-export default withRouter(withFirebase(ActivityList));
+const condition = authUser => !!authUser;
+
+export default withRouter(
+    withAuthorization(condition)(withFirebase(ActivityList))
+);

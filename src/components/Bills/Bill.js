@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import Currency from "react-currency-formatter";
+
 import "./Bill.scss";
 
 class Bill extends Component {
@@ -15,9 +17,12 @@ class Bill extends Component {
                     <div className="header">
                         <h3 className="name">{bill.name}</h3>
                         <div className="cost-wrapper">
-                            <div className="cost"> ${bill.cost}</div>
+                            <div className="cost">
+                                {" "}
+                                <Currency quantity={bill.cost} />
+                            </div>
                             <div className="split-cost">
-                                (${bill.splitCost} each)
+                                (<Currency quantity={bill.splitCost} /> each)
                             </div>
                         </div>
                     </div>

@@ -79,7 +79,7 @@ class Navigation extends React.Component {
                             color="inherit"
                             noWrap
                             className={classes.grow}>
-                            Split-It
+                            Split It
                         </Typography>
                         <Tooltip title="View Activities">
                             <Fab
