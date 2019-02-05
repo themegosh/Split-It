@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 
-import { SignUpLink } from "./SignUpPage";
-import { PasswordForgetLink } from "./PasswordForgetPage";
-import { withFirebase } from "../components/Firebase";
+import { SignUpLink } from "../SignUpPage";
+import { PasswordForgetLink } from "../PasswordForgetPage";
+import { withFirebase } from "../../components/Firebase";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import Paper from "@material-ui/core/Paper";
 
-import * as ROUTES from "../constants/routes";
+import * as ROUTES from "../../constants/routes";
 
 import "./SignInPage.scss";
 

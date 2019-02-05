@@ -34,7 +34,7 @@ class EditBillDialog extends Component {
         };
     }
 
-    handleSave = () => {
+    btnSaveClick = () => {
         const { bill } = this.state;
         const { billId, firebase, activityId } = this.props;
         const userId = this.props.authUser.uid;
@@ -196,11 +196,14 @@ class EditBillDialog extends Component {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
+                    <Button onClick={this.handleDelete} color="secondary">
+                        Cancel
+                    </Button>
                     <Button onClick={this.props.onClose} color="default">
                         Cancel
                     </Button>
                     <Button
-                        onClick={this.handleSave}
+                        onClick={this.btnSaveClick}
                         disabled={error}
                         color="primary">
                         Save

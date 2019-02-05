@@ -127,7 +127,7 @@ class Activity extends Component {
         const activityId = this.props.match.params.id;
 
         return (
-            <div className="activities">
+            <div className="activity">
                 {loading ? (
                     <div>Loading...</div>
                 ) : (

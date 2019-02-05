@@ -114,40 +114,34 @@ class ActivityList extends Component {
                 {Object.keys(activities).map(uid => {
                     const activity = activities[uid];
                     return (
-                        <div key={uid}>
-                            <Card>
-                                <div onClick={() => this.btnGoToActivity(uid)}>
-                                    <CardActionArea>
-                                        <CardContent>
-                                            <Typography
-                                                gutterBottom
-                                                variant="h5"
-                                                component="h2">
-                                                {activity.name}
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </div>
-                                <CardActions>
-                                    <Button
-                                        size="small"
-                                        color="primary"
-                                        onClick={() =>
-                                            this.btnEditActivity(uid)
-                                        }>
-                                        Rename
-                                    </Button>
-                                    <Button
-                                        onClick={() =>
-                                            this.btnDeleteActivity(uid)
-                                        }
-                                        color="secondary"
-                                        size="small">
-                                        Delete
-                                    </Button>
-                                </CardActions>
-                            </Card>
-                        </div>
+                        <Card className="activity-item" key={uid}>
+                            <div onClick={() => this.btnGoToActivity(uid)}>
+                                <CardActionArea>
+                                    <CardContent>
+                                        <Typography
+                                            gutterBottom
+                                            variant="h5"
+                                            component="h2">
+                                            {activity.name}
+                                        </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </div>
+                            <CardActions>
+                                <Button
+                                    size="small"
+                                    color="primary"
+                                    onClick={() => this.btnEditActivity(uid)}>
+                                    Rename
+                                </Button>
+                                <Button
+                                    onClick={() => this.btnDeleteActivity(uid)}
+                                    color="secondary"
+                                    size="small">
+                                    Delete
+                                </Button>
+                            </CardActions>
+                        </Card>
                     );
                 })}
                 <hr />

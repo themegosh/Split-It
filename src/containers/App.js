@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Navigation from "../components/Navigation";
 import SignUpPage from "./SignUpPage";
-import SignInPage from "./SignInPage";
+import SignInPage from "./SignIn/SignInPage";
 import PasswordForgetPage from "./PasswordForgetPage";
 import AccountPage from "./AccountPage";
 import ActivityPage from "../components/Activity/Activity";

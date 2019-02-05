@@ -39,7 +39,8 @@ class BillsList extends Component {
         const bill = (billId && this.state.bills[billId]) || {
             name: "",
             paidFor: [],
-            payer: ""
+            payer: "",
+            cost: 0
         };
 
         this.setState({
