@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Avatar from "@material-ui/core/Avatar";
 import Currency from "react-currency-formatter";
 import PersonIcon from "./PersonIcon";
 
