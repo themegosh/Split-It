@@ -16,7 +16,7 @@ import * as ROUTES from "../../constants/routes";
 import "./SignInPage.scss";
 
 const SignInPage = () => (
-    <Paper class="sign-in-page" elevation={1}>
+    <Paper className="sign-in-page" elevation={1}>
         <h1>Sign In</h1>
         <SignInGoogle />
         <SignInForm />
@@ -39,15 +39,28 @@ class SignInGoogleBase extends Component {
     }
 
     onSubmit = event => {
-        this.props.firebase
+        const { firebase } = this.props;
+
+        firebase
             .doSignInWithGoogle()
             .then(socialAuthUser => {
-                // Create a user in your Firebase Realtime Database too
-                return this.props.firebase.user(socialAuthUser.user.uid).set({
-                    username: socialAuthUser.user.displayName,
-                    email: socialAuthUser.user.email,
-                    roles: []
-                });
+                //check if the user is new or old
+                return firebase
+                    .user(socialAuthUser.user.uid)
+                    .once("value")
+                    .then(snapshot => {
+                        const userObj = snapshot.val();
+
+                        if (!userObj) {
+                            return firebase.user(socialAuthUser.user.uid).set({
+                                username: socialAuthUser.user.displayName,
+                                email: socialAuthUser.user.email,
+                                roles: []
+                            });
+                        } else {
+                            return userObj;
+                        }
+                    });
             })
             .then(() => {
                 this.setState({ error: null });
@@ -171,7 +184,7 @@ class SignInFormBase extends Component {
                     onClick={this.props.onClose}
                     disabled={isInvalid}
                     className="btn-sign-in"
-                    fullWidth="true"
+                    fullWidth={true}
                     color="primary">
                     Sign In
                 </Button>
