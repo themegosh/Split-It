@@ -15,7 +15,8 @@ class Activity extends Component {
         people: [],
         totalCostsPaid: 0,
         totalCostsOwed: 0,
-        editBillOpen: false
+        editBillOpen: false,
+        loading: true
     };
 
     componentWillUnmount() {
