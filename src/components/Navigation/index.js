@@ -11,7 +11,7 @@ import Button from "@material-ui/core/Button";
 import { withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import { withFirebase } from "../Firebase";
-import { Avatar } from "@material-ui/core";
+import { Avatar, IconButton } from "@material-ui/core";
 
 const styles = {
     root: {
@@ -31,9 +31,6 @@ const styles = {
         left: 0,
         right: 0,
         margin: "0 auto"
-    },
-    menuButtons: {
-        display: "flex"
     }
 };
 
@@ -46,6 +43,10 @@ class Navigation extends React.Component {
         this.props.firebase.doSignOut();
     };
 
+    btnAccountClick = () => {
+        this.props.history.push(ROUTES.ACCOUNT);
+    };
+
     render() {
         const { classes, authUser } = this.props;
 
@@ -53,11 +54,14 @@ class Navigation extends React.Component {
 
         if (authUser && authUser.uid) {
             menuButtons = (
-                <div className={classes.menuButtons}>
-                    <Avatar
-                        src={authUser.photoURL}
-                        className={classes.menuButton}
-                    />
+                <div>
+                    <Tooltip title="Account Settings">
+                        <IconButton
+                            className={classes.menuButton}
+                            onClick={this.btnAccountClick}>
+                            <Avatar src={authUser.photoURL} />
+                        </IconButton>
+                    </Tooltip>
                     <Button
                         variant="contained"
                         color="secondary"
