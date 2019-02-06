@@ -2,10 +2,10 @@ import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Navigation from "../components/Navigation";
-import SignUpPage from "./SignUpPage";
-import SignInPage from "./SignInPage";
-import PasswordForgetPage from "./PasswordForgetPage";
-import AccountPage from "./AccountPage";
+import SignUpPage from "./SignUp/SignUpPage";
+import SignInPage from "./SignIn/SignInPage";
+import PasswordForgetPage from "./ForgotPassword/ForgotPasswordPage";
+import AccountPage from "./Account/AccountPage";
 import ActivityPage from "../components/Activity/Activity";
 import ActivityListPage from "../components/Activity/ActivityList";
 

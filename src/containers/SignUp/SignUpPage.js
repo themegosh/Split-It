@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
-import { withFirebase } from "../components/Firebase";
-import * as ROUTES from "../constants/routes";
+import { withFirebase } from "../../components/Firebase";
+import * as ROUTES from "../../constants/routes";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";

@@ -12,6 +12,7 @@ import { withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import { withAuthentication } from "../Session";
 import { withFirebase } from "../Firebase";
+import { Avatar } from "@material-ui/core";
 
 const styles = {
     root: {
@@ -31,6 +32,9 @@ const styles = {
         left: 0,
         right: 0,
         margin: "0 auto"
+    },
+    menuButtons: {
+        display: "flex"
     }
 };
 
@@ -50,12 +54,19 @@ class Navigation extends React.Component {
 
         if (authUser && authUser.uid) {
             menuButtons = (
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={this.btnSignOut}>
-                    Sign Out
-                </Button>
+                <div className={classes.menuButtons}>
+                    <Avatar
+                        src={authUser.photoURL}
+                        className={classes.menuButton}
+                    />
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        className={classes.menuButton}
+                        onClick={this.btnSignOut}>
+                        Sign Out
+                    </Button>
+                </div>
             );
         } else {
             // menuButtons = (
