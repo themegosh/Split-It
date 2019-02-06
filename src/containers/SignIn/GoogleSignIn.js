@@ -51,12 +51,14 @@ class GoogleSignInBase extends Component {
 
         return (
             <form onSubmit={this.onSubmit} className="google-sign-in">
-                <button class="googleSignIn" type="submit">
+                <button className="googleSignIn" type="submit">
                     <img
                         src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/G-on-white.svg"
                         alt="Google logo"
                     />
-                    <span class="googleSignIn__text">Sign in with Google</span>
+                    <span className="googleSignIn__text">
+                        Sign in with Google
+                    </span>
                 </button>
 
                 {error && <p>{error.message}</p>}

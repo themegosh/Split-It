@@ -18,7 +18,6 @@ class PeopleList extends Component {
     }
 
     componentDidMount() {
-        console.log("PeopleList componentDidMount");
         const userId = this.props.authUser.uid;
         const { activityId } = this.props;
 

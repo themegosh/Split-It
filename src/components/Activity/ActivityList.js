@@ -22,7 +22,8 @@ class ActivityList extends Component {
         open: false,
         selectedActivity: {},
         selectedActivityUid: null,
-        activities: []
+        activities: [],
+        loading: true
     };
 
     componentWillUnmount() {
@@ -33,9 +34,6 @@ class ActivityList extends Component {
         if (!this.props.authUser) {
             return;
         }
-        console.log("authUser", this.props.authUser.uid);
-
-        this.setState({ loading: true });
 
         this.props.firebase
             .activities(this.props.authUser.uid)
@@ -111,6 +109,7 @@ class ActivityList extends Component {
             <div className="activity-list">
                 <h1>Activites</h1>
                 <h3>Collections of bills to split with people</h3>
+
                 {Object.keys(activities).map(uid => {
                     const activity = activities[uid];
                     return (

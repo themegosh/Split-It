@@ -14,10 +14,10 @@ import { withAuthentication } from "../components/Session";
 
 import "./App.scss";
 
-const App = () => (
+const App = props => (
     <Router>
         <div>
-            <Navigation />
+            <Navigation authUser={props.authUser} />
 
             <Route exact path={ROUTES.HOME} component={ActivityListPage} />
             <Route

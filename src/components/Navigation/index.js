@@ -10,7 +10,6 @@ import Button from "@material-ui/core/Button";
 
 import { withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
-import { withAuthentication } from "../Session";
 import { withFirebase } from "../Firebase";
 import { Avatar } from "@material-ui/core";
 
@@ -102,6 +101,4 @@ class Navigation extends React.Component {
     }
 }
 
-export default withFirebase(
-    withRouter(withAuthentication(withStyles(styles)(Navigation)))
-);
+export default withFirebase(withRouter(withStyles(styles)(Navigation)));
