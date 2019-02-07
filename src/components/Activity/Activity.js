@@ -107,61 +107,81 @@ class Activity extends Component {
             person.difference = person.totalCostsPaid - person.totalCostsOwed;
         });
 
+        //split it
         let splits = [];
-        // //split it
-        // let tmpPeople = Object.assign(people);
+        const tmpPeople = JSON.parse(JSON.stringify(people));
 
-        // let ppl = Object.keys(tmpPeople).map(k => tmpPeople[k]);
+        Object.keys(tmpPeople).forEach(personId => {
+            const person = tmpPeople[personId];
+            console.log("SPLIT", person.name);
 
-        // console.log("ppl", ppl);
-        // Object.keys(tmpPeople).forEach(personId => {
-        //     const ower = people[personId];
+            //in the red
+            if (person.difference < 0) {
+                //console.log(ower.name, "OWES", ower.difference);
+                //find someone to reimburse
+                Object.keys(tmpPeople).forEach(reimburseeId => {
+                    const reimbursee = tmpPeople[reimburseeId];
 
-        //     console.log("SPLIT", ower.name);
+                    if (person.difference < 0 && reimbursee.difference > 0) {
+                        console.log(person.name, "OWES", person.difference);
 
-        //     //in the red
-        //     if (ower.difference < 0) {
-        //         //console.log(ower.name, "OWES", ower.difference);
-        //         //find someone to reimburse
-        //         Object.keys(tmpPeople).forEach(reimburseeId => {
-        //             const reimbersee = tmpPeople[reimburseeId];
+                        console.log(
+                            "found",
+                            reimbursee.name,
+                            "is owed",
+                            reimbursee.difference
+                        );
 
-        //             if (!ower.difference) {
-        //                 return;
-        //             }
-        //             console.log(ower.name, "STILL OWES", ower.difference);
+                        let amount = 0;
+                        if (reimbursee.difference < -person.difference) {
+                            amount = reimbursee.difference;
+                            reimbursee.difference = 0;
 
-        //             if (reimbersee.difference > 0) {
-        //                 let amount = 0;
-        //                 if (reimbersee.difference < ower.difference) {
-        //                     amount = reimbersee.difference;
-        //                     reimbersee.difference = 0;
-        //                     ower.difference -= reimbersee.difference;
-        //                 } else {
-        //                     amount = ower.difference;
-        //                     reimbersee.difference -= ower.difference;
-        //                     ower.difference = 0;
-        //                 }
+                            console.log(
+                                reimbursee.name,
+                                "is paid off after being given",
+                                amount,
+                                "by",
+                                person.name
+                            );
 
-        //                 console.log(
-        //                     "ACTION",
-        //                     ower.name,
-        //                     ">",
-        //                     amount,
-        //                     ">",
-        //                     reimbersee.name
-        //                 );
-        //                 splits.push({
-        //                     from: ower,
-        //                     to: reimbersee,
-        //                     amount: -amount
-        //                 });
-        //             }
-        //         });
-        //     }
+                            person.difference += amount;
+                        } else {
+                            amount = -person.difference;
+                            reimbursee.difference -= amount;
 
-        //     console.log("AFTER DIFF ", ower.difference);
-        // });
+                            console.log(
+                                reimbursee.name,
+                                "was given",
+                                amount,
+                                "by",
+                                person.name,
+                                "and still needs",
+                                reimbursee.difference
+                            );
+
+                            person.difference = 0;
+                        }
+
+                        // console.log(
+                        //     "ACTION",
+                        //     person.name,
+                        //     ">",
+                        //     amount,
+                        //     ">",
+                        //     reimbursee.name
+                        // );
+                        splits.push({
+                            from: person,
+                            to: reimbursee,
+                            amount: amount
+                        });
+                    }
+                });
+            }
+
+            //console.log("AFTER DIFF ", person.difference);
+        });
 
         return {
             totalCostsOwed,
@@ -200,8 +220,14 @@ class Activity extends Component {
                     <div>
                         <h2>{name}</h2>
                         <div className="activities-summary">
-                            <div>Total Costs Paid: {totalCostsPaid}</div>
-                            <div>total Costs Owed: {totalCostsOwed}</div>
+                            <div>
+                                Total Costs Paid:{" "}
+                                <Currency quantity={totalCostsPaid} />
+                            </div>
+                            <div>
+                                total Costs Owed:{" "}
+                                <Currency quantity={totalCostsOwed} />
+                            </div>
                         </div>
                         <div className="middle-wrapper">
                             <PeopleList
@@ -215,7 +241,7 @@ class Activity extends Component {
                                 activityId={activityId}
                                 authUser={authUser}
                             />
-                            {/* <h3>Split! {splitsTotal}</h3>
+                            <h3>Split! {splitsTotal}</h3>
                             <div>
                                 {splits.map((action, key) => {
                                     return (
@@ -228,7 +254,7 @@ class Activity extends Component {
                                         </h4>
                                     );
                                 })}
-                            </div> */}
+                            </div>
                         </div>
                     </div>
                 )}
