@@ -1,11 +1,37 @@
 import React, { Component } from "react";
 import Currency from "react-currency-formatter";
+import Chip from "@material-ui/core/Chip";
+import { withStyles } from "@material-ui/core";
 
 import "./Bill.scss";
+import PersonIcon from "../People/PersonIcon";
+
+const styles = {
+    chkItems: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around"
+    },
+    chkLabel: {
+        flexGrow: 1,
+        flexBasis: "20%"
+    },
+    lblFullWidth: {
+        width: "100%"
+    },
+    paidForWrapper: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "baseline"
+    },
+    paidFor: {
+        margin: "0 5px 5px"
+    }
+};
 
 class Bill extends Component {
     render() {
-        const { bill, people } = this.props;
+        const { bill, people, classes } = this.props;
 
         return (
             <div className="bill-wrapper">
@@ -18,7 +44,6 @@ class Bill extends Component {
                         <h3 className="name">{bill.name}</h3>
                         <div className="cost-wrapper">
                             <div className="cost">
-                                {" "}
                                 <Currency quantity={bill.cost} />
                             </div>
                             <div className="split-cost">
@@ -29,12 +54,19 @@ class Bill extends Component {
                     <div className="footer">
                         <div className="payer">{people[bill.payer].name} </div>
                         paid for
-                        <div className="paid-for-wrapper">
+                        <div className={classes.paidForWrapper}>
                             {bill.paidFor.map((person, key) => {
                                 return (
-                                    <div className="name" key={key}>
-                                        {people[person].name}
-                                    </div>
+                                    <Chip
+                                        key={key}
+                                        avatar={
+                                            <PersonIcon
+                                                name={people[person].name}
+                                            />
+                                        }
+                                        label={people[person].name}
+                                        className={classes.paidFor}
+                                    />
                                 );
                             })}
                         </div>
@@ -45,4 +77,4 @@ class Bill extends Component {
     }
 }
 
-export default Bill;
+export default withStyles(styles)(Bill);

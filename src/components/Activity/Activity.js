@@ -4,15 +4,16 @@ import BillsList from "../Bills/BillsList";
 import PeopleList from "../People/PeopleList";
 import { withFirebase } from "../Firebase";
 import { withAuthorization } from "../Session";
-
 import { withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
+import Currency from "react-currency-formatter";
 
 class Activity extends Component {
     state = {
         name: "",
         bills: [],
         people: [],
+        splits: [],
         totalCostsPaid: 0,
         totalCostsOwed: 0,
         editBillOpen: false,
@@ -54,6 +55,7 @@ class Activity extends Component {
                     people: processedActivity.people,
                     totalCostsPaid: processedActivity.totalCostsPaid,
                     totalCostsOwed: processedActivity.totalCostsOwed,
+                    splits: processedActivity.splits,
                     loading: false
                 });
             });
@@ -105,11 +107,68 @@ class Activity extends Component {
             person.difference = person.totalCostsPaid - person.totalCostsOwed;
         });
 
+        let splits = [];
+        // //split it
+        // let tmpPeople = Object.assign(people);
+
+        // let ppl = Object.keys(tmpPeople).map(k => tmpPeople[k]);
+
+        // console.log("ppl", ppl);
+        // Object.keys(tmpPeople).forEach(personId => {
+        //     const ower = people[personId];
+
+        //     console.log("SPLIT", ower.name);
+
+        //     //in the red
+        //     if (ower.difference < 0) {
+        //         //console.log(ower.name, "OWES", ower.difference);
+        //         //find someone to reimburse
+        //         Object.keys(tmpPeople).forEach(reimburseeId => {
+        //             const reimbersee = tmpPeople[reimburseeId];
+
+        //             if (!ower.difference) {
+        //                 return;
+        //             }
+        //             console.log(ower.name, "STILL OWES", ower.difference);
+
+        //             if (reimbersee.difference > 0) {
+        //                 let amount = 0;
+        //                 if (reimbersee.difference < ower.difference) {
+        //                     amount = reimbersee.difference;
+        //                     reimbersee.difference = 0;
+        //                     ower.difference -= reimbersee.difference;
+        //                 } else {
+        //                     amount = ower.difference;
+        //                     reimbersee.difference -= ower.difference;
+        //                     ower.difference = 0;
+        //                 }
+
+        //                 console.log(
+        //                     "ACTION",
+        //                     ower.name,
+        //                     ">",
+        //                     amount,
+        //                     ">",
+        //                     reimbersee.name
+        //                 );
+        //                 splits.push({
+        //                     from: ower,
+        //                     to: reimbersee,
+        //                     amount: -amount
+        //                 });
+        //             }
+        //         });
+        //     }
+
+        //     console.log("AFTER DIFF ", ower.difference);
+        // });
+
         return {
             totalCostsOwed,
             totalCostsPaid,
-            bills: bills,
-            people: people
+            bills,
+            people,
+            splits
         };
     }
 
@@ -120,12 +179,18 @@ class Activity extends Component {
             totalCostsOwed,
             people,
             loading,
-            name
+            name,
+            splits
         } = this.state;
 
         const { authUser } = this.props;
 
         const activityId = this.props.match.params.id;
+
+        let splitsTotal = 0;
+        splits.forEach(split => {
+            splitsTotal += split.amount;
+        });
 
         return (
             <div className="activity">
@@ -150,7 +215,20 @@ class Activity extends Component {
                                 activityId={activityId}
                                 authUser={authUser}
                             />
-                            <h3>Split!</h3>
+                            {/* <h3>Split! {splitsTotal}</h3>
+                            <div>
+                                {splits.map((action, key) => {
+                                    return (
+                                        <h4 key={key}>
+                                            {action.from.name} ->
+                                            <Currency
+                                                quantity={action.amount}
+                                            />{" "}
+                                            -> {action.to.name}
+                                        </h4>
+                                    );
+                                })}
+                            </div> */}
                         </div>
                     </div>
                 )}

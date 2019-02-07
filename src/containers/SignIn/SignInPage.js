@@ -67,7 +67,6 @@ class SignInFormBase extends Component {
             <form onSubmit={this.onSubmit} className="sign-in-form">
                 <FormControl required fullWidth>
                     <TextField
-                        autoFocus
                         required
                         margin="dense"
                         id="email"
@@ -81,7 +80,6 @@ class SignInFormBase extends Component {
                 </FormControl>
                 <FormControl required fullWidth>
                     <TextField
-                        autoFocus
                         required
                         name="password"
                         margin="dense"

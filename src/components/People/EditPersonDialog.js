@@ -13,7 +13,7 @@ class EditPersonDialog extends Component {
         person: this.props.person
     };
 
-    handleSave = () => {
+    btnSave = () => {
         const { person } = this.state;
         const { activityId, personId, firebase } = this.props;
         const userId = this.props.authUser.uid;
@@ -52,23 +52,46 @@ class EditPersonDialog extends Component {
 
     onKeyPress = e => {
         if (e.key === "Enter") {
-            this.handleSave();
+            this.btnSave();
         }
     };
 
     btnDelete = () => {
         const { activityId, personId, firebase, authUser } = this.props;
-
         firebase
-            .people(authUser.uid, activityId)
-            .child(personId)
-            .remove();
-        this.props.handleClose();
+            .bills(authUser.uid, activityId)
+            .once("value")
+            .then(snapshot => {
+                let isNameUsed = false;
+                const bills = snapshot.val();
+                console.log("bills", bills);
+
+                isNameUsed = Object.keys(bills).some(
+                    billId =>
+                        bills[billId].payer === personId ||
+                        bills[billId].paidFor.some(
+                            paidForPersonId => paidForPersonId === personId
+                        )
+                );
+
+                if (!isNameUsed) {
+                    firebase
+                        .people(authUser.uid, activityId)
+                        .child(personId)
+                        .remove();
+                    this.props.handleClose();
+                } else {
+                    //todo add toast here
+                    alert(
+                        "Person is assigned to a bill in some way and cannot be deleted"
+                    );
+                }
+            });
     };
 
     render() {
         const { person } = this.state;
-        const { open } = this.props;
+        const { open, personId } = this.props;
         const error = !person.name;
 
         return (
@@ -95,14 +118,17 @@ class EditPersonDialog extends Component {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.btnDelete} color="secondary">
+                    <Button
+                        onClick={this.btnDelete}
+                        color="secondary"
+                        disabled={!personId}>
                         Delete
                     </Button>
                     <Button onClick={this.props.handleClose} color="default">
                         Cancel
                     </Button>
                     <Button
-                        onClick={this.handleSave}
+                        onClick={this.btnSave}
                         disabled={error}
                         color="primary">
                         Save
