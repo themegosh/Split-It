@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Currency from "react-currency-formatter";
 import Chip from "@material-ui/core/Chip";
 import { withStyles } from "@material-ui/core";
 
@@ -44,10 +43,10 @@ class Bill extends Component {
                         <h3 className="name">{bill.name}</h3>
                         <div className="cost-wrapper">
                             <div className="cost">
-                                <Currency quantity={bill.cost} />
+                                {bill.cost.toFormat("$0,0.00")}
                             </div>
                             <div className="split-cost">
-                                (<Currency quantity={bill.splitCost} /> each)
+                                ({bill.splitCost.toFormat("$0,0.00")} each)
                             </div>
                         </div>
                     </div>

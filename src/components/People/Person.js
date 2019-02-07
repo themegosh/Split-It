@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Currency from "react-currency-formatter";
 import PersonIcon from "./PersonIcon";
 
 import "./Person.scss";
@@ -24,25 +23,13 @@ class Person extends Component {
                     <div className="header">
                         <h3 className="name">{person.name}</h3>
                         <div className="spend-wrapper">
-                            Paid{" "}
-                            <Currency
-                                className="spend-value"
-                                quantity={person.totalCostsPaid}
-                            />
+                            Paid {person.totalCostsPaid.toFormat("$0,0.00")}
                         </div>
                         <div className="spend-wrapper">
-                            Owed{" "}
-                            <Currency
-                                className="spend-value"
-                                quantity={person.totalCostsOwed}
-                            />
+                            Owed {person.totalCostsOwed.toFormat("$0,0.00")}
                         </div>
                         <div className="spend-wrapper">
-                            Balance{" "}
-                            <Currency
-                                className="spend-value"
-                                quantity={person.difference}
-                            />
+                            Balance {person.difference.toFormat("$0,0.00")}
                         </div>
                     </div>
                 </div>

@@ -6,7 +6,166 @@ import { withFirebase } from "../Firebase";
 import { withAuthorization } from "../Session";
 import { withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
-import Currency from "react-currency-formatter";
+import Dinero from "dinero.js";
+import cloneDeep from "lodash/cloneDeep";
+
+const toPrice = (amount, factor = Math.pow(10, 2)) => {
+    return Dinero({ amount: Math.round(amount * factor) });
+};
+
+const processActivity = (bills, people) => {
+    let totalCostsPaid = toPrice(0);
+    let totalCostsOwed = toPrice(0);
+
+    //find bill cost per person
+    Object.keys(bills).forEach(billId => {
+        const bill = bills[billId];
+        bill.cost = toPrice(bill.cost);
+        bill.splitCost = bill.cost.divide(bill.paidFor.length);
+        totalCostsPaid = totalCostsPaid.add(bill.cost);
+        totalCostsOwed = totalCostsOwed.add(bill.cost);
+    });
+
+    //find person's paid and owed totals
+    Object.keys(people).forEach(personId => {
+        const person = people[personId];
+
+        person.totalCostsPaid = toPrice(0);
+        person.totalCostsOwed = toPrice(0);
+        person.difference = toPrice(0);
+
+        Object.keys(bills).forEach(billId => {
+            const bill = bills[billId];
+            if (bill.payer === personId) {
+                person.totalCostsPaid = person.totalCostsPaid.add(bill.cost);
+            }
+            if (isBillOwedBy(people, bill, personId)) {
+                person.totalCostsOwed = person.totalCostsOwed.add(
+                    bill.splitCost
+                );
+            }
+        });
+    });
+
+    //person's difference
+    Object.keys(people).forEach(uid => {
+        const person = people[uid];
+        person.difference = person.totalCostsPaid.subtract(
+            person.totalCostsOwed
+        );
+    });
+
+    //split it
+    let splits = [];
+    const tmpPeople = cloneDeep(people);
+
+    Object.keys(tmpPeople).forEach(personId => {
+        const person = tmpPeople[personId];
+        //person.difference = toPrice(person.difference);
+        // console.log(
+        //     "SPLIT",
+        //     person.name,
+        //     person.difference.toFormat("$0,0.00")
+        // );
+
+        //in the red
+        if (person.difference.lessThan(toPrice(0))) {
+            //console.log(ower.name, "OWES", ower.difference);
+            //find someone to reimburse
+            Object.keys(tmpPeople).forEach(reimburseeId => {
+                const reimbursee = tmpPeople[reimburseeId];
+
+                if (
+                    person.difference.lessThan(toPrice(0)) &&
+                    reimbursee.difference.greaterThan(toPrice(0))
+                ) {
+                    // console.log(
+                    //     person.name,
+                    //     "OWES",
+                    //     person.difference.toFormat("$0,0.00")
+                    // );
+
+                    // console.log(
+                    //     "found",
+                    //     reimbursee.name,
+                    //     "is owed",
+                    //     reimbursee.difference.toFormat("$0,0.00")
+                    // );
+
+                    let amount;
+                    if (
+                        reimbursee.difference.lessThan(
+                            person.difference.multiply(-1)
+                        )
+                    ) {
+                        amount = reimbursee.difference;
+                        reimbursee.difference = toPrice(0);
+
+                        // console.log(
+                        //     reimbursee.name,
+                        //     "is paid off after being given",
+                        //     amount.toFormat("$0,0.00"),
+                        //     "by",
+                        //     person.name
+                        // );
+
+                        person.difference = person.difference.add(amount);
+                    } else {
+                        amount = person.difference.multiply(-1);
+                        reimbursee.difference = reimbursee.difference.subtract(
+                            amount
+                        );
+
+                        // console.log(
+                        //     reimbursee.name,
+                        //     "was given",
+                        //     amount.toFormat("$0,0.00"),
+                        //     "by",
+                        //     person.name,
+                        //     "and still needs",
+                        //     reimbursee.difference.toFormat("$0,0.00")
+                        // );
+
+                        person.difference = toPrice(0);
+                    }
+
+                    // console.log(
+                    //     "ACTION",
+                    //     person.name,
+                    //     ">",
+                    //     amount,
+                    //     ">",
+                    //     reimbursee.name
+                    // );
+                    splits.push({
+                        from: person,
+                        to: reimbursee,
+                        amount: amount
+                    });
+                }
+            });
+        }
+
+        //console.log("AFTER DIFF ", person.difference);
+    });
+
+    return {
+        totalCostsOwed,
+        totalCostsPaid,
+        bills,
+        people,
+        splits
+    };
+};
+
+const isBillOwedBy = (people, bill, personId) => {
+    for (var i = 0; i < bill.paidFor.length; i++) {
+        if (personId === bill.paidFor[i]) {
+            return true;
+        }
+    }
+    return false;
+};
 
 class Activity extends Component {
     state = {
@@ -47,7 +206,7 @@ class Activity extends Component {
                 const bills = activity.bills || [];
                 const people = activity.people || [];
 
-                const processedActivity = this.processActivity(bills, people);
+                const processedActivity = processActivity(bills, people);
 
                 this.setState({
                     name: activity.name,
@@ -59,137 +218,6 @@ class Activity extends Component {
                     loading: false
                 });
             });
-    }
-
-    isBillOwedBy(people, bill, personId) {
-        for (var i = 0; i < bill.paidFor.length; i++) {
-            if (personId === bill.paidFor[i]) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    processActivity(bills, people) {
-        let totalCostsPaid = 0;
-        let totalCostsOwed = 0;
-
-        //find bill cost per person
-        Object.keys(bills).forEach(billId => {
-            const bill = bills[billId];
-            bill.splitCost = bill.cost / bill.paidFor.length;
-            totalCostsPaid += bill.cost;
-            totalCostsOwed += bill.cost;
-        });
-
-        //find person's paid and owed totals
-        Object.keys(people).forEach(personId => {
-            const person = people[personId];
-
-            person.totalCostsPaid = 0;
-            person.totalCostsOwed = 0;
-            person.difference = 0;
-
-            Object.keys(bills).forEach(billId => {
-                const bill = bills[billId];
-                if (people[bill.payer].name === person.name) {
-                    person.totalCostsPaid += bill.cost;
-                }
-                if (this.isBillOwedBy(people, bill, personId)) {
-                    person.totalCostsOwed += bill.splitCost;
-                }
-            });
-        });
-
-        //person's difference
-        Object.keys(people).forEach(uid => {
-            const person = people[uid];
-            person.difference = person.totalCostsPaid - person.totalCostsOwed;
-        });
-
-        //split it
-        let splits = [];
-        const tmpPeople = JSON.parse(JSON.stringify(people));
-
-        Object.keys(tmpPeople).forEach(personId => {
-            const person = tmpPeople[personId];
-            console.log("SPLIT", person.name);
-
-            //in the red
-            if (person.difference < 0) {
-                //console.log(ower.name, "OWES", ower.difference);
-                //find someone to reimburse
-                Object.keys(tmpPeople).forEach(reimburseeId => {
-                    const reimbursee = tmpPeople[reimburseeId];
-
-                    if (person.difference < 0 && reimbursee.difference > 0) {
-                        console.log(person.name, "OWES", person.difference);
-
-                        console.log(
-                            "found",
-                            reimbursee.name,
-                            "is owed",
-                            reimbursee.difference
-                        );
-
-                        let amount = 0;
-                        if (reimbursee.difference < -person.difference) {
-                            amount = reimbursee.difference;
-                            reimbursee.difference = 0;
-
-                            console.log(
-                                reimbursee.name,
-                                "is paid off after being given",
-                                amount,
-                                "by",
-                                person.name
-                            );
-
-                            person.difference += amount;
-                        } else {
-                            amount = -person.difference;
-                            reimbursee.difference -= amount;
-
-                            console.log(
-                                reimbursee.name,
-                                "was given",
-                                amount,
-                                "by",
-                                person.name,
-                                "and still needs",
-                                reimbursee.difference
-                            );
-
-                            person.difference = 0;
-                        }
-
-                        // console.log(
-                        //     "ACTION",
-                        //     person.name,
-                        //     ">",
-                        //     amount,
-                        //     ">",
-                        //     reimbursee.name
-                        // );
-                        splits.push({
-                            from: person,
-                            to: reimbursee,
-                            amount: amount
-                        });
-                    }
-                });
-            }
-
-            //console.log("AFTER DIFF ", person.difference);
-        });
-
-        return {
-            totalCostsOwed,
-            totalCostsPaid,
-            bills,
-            people,
-            splits
-        };
     }
 
     render() {
@@ -207,9 +235,9 @@ class Activity extends Component {
 
         const activityId = this.props.match.params.id;
 
-        let splitsTotal = 0;
+        let splitsTotal = toPrice(0);
         splits.forEach(split => {
-            splitsTotal += split.amount;
+            splitsTotal = splitsTotal.add(split.amount);
         });
 
         return (
@@ -221,12 +249,12 @@ class Activity extends Component {
                         <h2>{name}</h2>
                         <div className="activities-summary">
                             <div>
-                                Total Costs Paid:{" "}
-                                <Currency quantity={totalCostsPaid} />
+                                Total Costs Paid:
+                                {totalCostsPaid.toFormat("$0,0.00")}
                             </div>
                             <div>
                                 total Costs Owed:{" "}
-                                <Currency quantity={totalCostsOwed} />
+                                {totalCostsOwed.toFormat("$0,0.00")}
                             </div>
                         </div>
                         <div className="middle-wrapper">
@@ -241,15 +269,15 @@ class Activity extends Component {
                                 activityId={activityId}
                                 authUser={authUser}
                             />
-                            <h3>Split! {splitsTotal}</h3>
+                            <h3>Split! {splitsTotal.toFormat("$0,0.00")}</h3>
                             <div>
                                 {splits.map((action, key) => {
                                     return (
                                         <h4 key={key}>
                                             {action.from.name} ->
-                                            <Currency
-                                                quantity={action.amount}
-                                            />{" "}
+                                            {action.amount.toFormat(
+                                                "$0,0.00"
+                                            )}{" "}
                                             -> {action.to.name}
                                         </h4>
                                     );
