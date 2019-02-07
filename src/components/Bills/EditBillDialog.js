@@ -14,7 +14,27 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import { withFirebase } from "../Firebase";
-import { withAuthorization } from "../Session";
+import { withStyles } from "@material-ui/core";
+
+const styles = {
+    chkItems: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around"
+    },
+    chkLabel: {
+        flexGrow: 1,
+        flexBasis: "20%"
+    },
+    lblFullWidth: {
+        width: "100%"
+    },
+    lblWithButtonWrapper: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "baseline"
+    }
+};
 
 class EditBillDialog extends Component {
     constructor(props) {
@@ -110,9 +130,26 @@ class EditBillDialog extends Component {
         this.setState({ chkPeople, bill });
     };
 
+    btnCheckAll = () => {
+        const chkPeople = this.state.chkPeople.map(person => {
+            person.checked = true;
+            return person;
+        });
+
+        let bill = Object.assign({}, this.state.bill);
+
+        bill.paidFor = chkPeople
+            .filter(x => x.checked)
+            .map(person => {
+                return person.uid;
+            });
+
+        this.setState({ chkPeople, bill });
+    };
+
     render() {
         const { bill, chkPeople } = this.state;
-        const { people, open } = this.props;
+        const { people, open, classes } = this.props;
         const error =
             !bill.name || !bill.cost || !bill.payer || bill.paidFor.length < 1;
 
@@ -172,12 +209,24 @@ class EditBillDialog extends Component {
                         required
                         error={bill.paidFor.length < 1}
                         component="fieldset"
+                        className={classes.lblFullWidth}
                         margin="dense">
-                        <FormLabel component="legend">Paid for</FormLabel>
-                        <FormGroup>
+                        <div className={classes.lblWithButtonWrapper}>
+                            <FormLabel component="legend">Paid for</FormLabel>
+
+                            <Button
+                                color="primary"
+                                size="small"
+                                variant="outlined"
+                                onClick={this.btnCheckAll}>
+                                Select All
+                            </Button>
+                        </div>
+                        <FormGroup className={classes.chkItems}>
                             {chkPeople.map((person, key) => {
                                 return (
                                     <FormControlLabel
+                                        className={classes.chkLabel}
                                         control={
                                             <Checkbox
                                                 checked={person.checked}
@@ -214,6 +263,4 @@ class EditBillDialog extends Component {
     }
 }
 
-const condition = authUser => !!authUser;
-
-export default withAuthorization(condition)(withFirebase(EditBillDialog));
+export default withStyles(styles)(withFirebase(EditBillDialog));

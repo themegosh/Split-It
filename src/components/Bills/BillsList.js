@@ -61,7 +61,7 @@ class BillsList extends Component {
     };
 
     render() {
-        const { bills, people, activityId } = this.props;
+        const { bills, people, activityId, authUser } = this.props;
         const { selectedBill, selectedBillId, open } = this.state;
         const disablebtnAdd = !Object.keys(people).length;
 
@@ -75,6 +75,7 @@ class BillsList extends Component {
                     billId={selectedBillId}
                     people={people}
                     activityId={activityId}
+                    authUser={authUser}
                 />
             );
         }

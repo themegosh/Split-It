@@ -34,7 +34,7 @@ const PersonIcon = props => {
         }
     }
 
-    console.log(hashCode(props.name));
+    //console.log(hashCode(props.name));
 
     const bgColor = "#" + intToRGB(hashCode(props.name));
 

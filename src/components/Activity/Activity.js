@@ -150,6 +150,7 @@ class Activity extends Component {
                                 activityId={activityId}
                                 authUser={authUser}
                             />
+                            <h3>Split!</h3>
                         </div>
                     </div>
                 )}

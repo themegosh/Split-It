@@ -56,7 +56,7 @@ class PeopleList extends Component {
     // };
 
     render() {
-        const { people, activityId } = this.props;
+        const { people, activityId, authUser } = this.props;
         const { open, selectedId, selectedPerson } = this.state;
 
         let editDialog;
@@ -69,21 +69,14 @@ class PeopleList extends Component {
                     personId={selectedId}
                     allPeople={people}
                     activityId={activityId}
+                    authUser={authUser}
                 />
             );
         }
 
         return (
             <div className="people">
-                <h2>
-                    People
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => this.handleClickOpen(null)}>
-                        Add Person
-                    </Button>
-                </h2>
+                <h2>People</h2>
                 <div className="people-list">
                     {Object.keys(people).map(uid => {
                         const person = people[uid];
@@ -98,6 +91,13 @@ class PeopleList extends Component {
                             />
                         );
                     })}
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => this.handleClickOpen(null)}>
+                        Add Person
+                    </Button>
                 </div>
                 {editDialog}
             </div>
