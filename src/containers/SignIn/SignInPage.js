@@ -26,8 +26,8 @@ const SignInPage = () => (
 );
 
 const INITIAL_STATE = {
-    email: "",
-    password: "",
+    email: "test@test.com",
+    password: "testing",
     error: null
 };
 

@@ -18,12 +18,11 @@ class BillsList extends Component {
     }
 
     componentDidMount() {
-        const userId = this.props.authUser.uid;
-        const { activityId } = this.props;
+        const { activityId, firebase, authUser } = this.props;
 
         this.setState({ loading: true });
 
-        this.props.firebase.bills(userId, activityId).on("value", snapshot => {
+        firebase.bills(authUser.uid, activityId).on("value", snapshot => {
             const bills = snapshot.val();
 
             this.setState({

@@ -85,10 +85,6 @@ class EditBillDialog extends Component {
         }
     };
 
-    handleDelete = () => {
-        this.props.handleDelete(this.state.bill);
-    };
-
     onPayerChange = event => {
         let bill = Object.assign({}, this.state.bill);
         bill.payer = event.target.value;
@@ -145,6 +141,17 @@ class EditBillDialog extends Component {
             });
 
         this.setState({ chkPeople, bill });
+    };
+
+    btnDelete = () => {
+        const { billId, firebase, activityId, authUser } = this.props;
+
+        firebase
+            .bills(authUser.uid, activityId)
+            .child(billId)
+            .remove();
+
+        this.props.onClose();
     };
 
     render() {
@@ -245,8 +252,8 @@ class EditBillDialog extends Component {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleDelete} color="secondary">
-                        Cancel
+                    <Button onClick={this.btnDelete} color="secondary">
+                        Delete
                     </Button>
                     <Button onClick={this.props.onClose} color="default">
                         Cancel
