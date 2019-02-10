@@ -106,7 +106,7 @@ class EditBillDialog extends Component {
 
     onKeyPress = e => {
         if (e.key === "Enter") {
-            this.props.onClose(this.state.bill);
+            this.btnSaveClick();
         }
     };
 

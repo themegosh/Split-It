@@ -4,6 +4,7 @@ import EditBillDialog from "./EditBillDialog";
 import Bill from "./Bill";
 import Button from "@material-ui/core/Button";
 import { withFirebase } from "../Firebase";
+import { Typography } from "@material-ui/core";
 
 class BillsList extends Component {
     state = {
@@ -81,7 +82,9 @@ class BillsList extends Component {
 
         return (
             <div className="bills">
-                <h2>Bills</h2>
+                <Typography variant="h4" gutterBottom>
+                    Bills
+                </Typography>
                 {Object.keys(bills).map(uid => {
                     const bill = bills[uid];
                     return (

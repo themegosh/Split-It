@@ -8,6 +8,19 @@ import { withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import Dinero from "dinero.js";
 import cloneDeep from "lodash/cloneDeep";
+import PersonIcon from "../People/PersonIcon";
+import { withStyles, Typography } from "@material-ui/core";
+import { ArrowForward } from "@material-ui/icons";
+
+const styles = {
+    splitPersonIcon: {
+        display: "inline-flex"
+    },
+    splitHeader: {
+        fontSize: "27px",
+        margin: "16px"
+    }
+};
 
 const toPrice = (amount, factor = Math.pow(10, 2)) => {
     return Dinero({ amount: Math.round(amount * factor) });
@@ -231,7 +244,7 @@ class Activity extends Component {
             splits
         } = this.state;
 
-        const { authUser } = this.props;
+        const { authUser, classes } = this.props;
 
         const activityId = this.props.match.params.id;
 
@@ -246,43 +259,80 @@ class Activity extends Component {
                     <div>Loading...</div>
                 ) : (
                     <div>
-                        <h2>{name}</h2>
-                        <div className="activities-summary">
-                            <div>
-                                Total Costs Paid:
-                                {totalCostsPaid.toFormat("$0,0.00")}
+                        <section>
+                            <Typography variant="h2" gutterBottom>
+                                {name}
+                            </Typography>
+                            <div className="activities-summary">
+                                <div>
+                                    Total Costs Paid:
+                                    {totalCostsPaid.toFormat("$0,0.00")}
+                                </div>
+                                <div>
+                                    total Costs Owed:{" "}
+                                    {totalCostsOwed.toFormat("$0,0.00")}
+                                </div>
                             </div>
-                            <div>
-                                total Costs Owed:{" "}
-                                {totalCostsOwed.toFormat("$0,0.00")}
-                            </div>
-                        </div>
+                        </section>
                         <div className="middle-wrapper">
-                            <PeopleList
-                                people={people}
-                                activityId={activityId}
-                                authUser={authUser}
-                            />
-                            <BillsList
-                                bills={bills}
-                                people={people}
-                                activityId={activityId}
-                                authUser={authUser}
-                            />
-                            <h3>Split! {splitsTotal.toFormat("$0,0.00")}</h3>
-                            <div>
-                                {splits.map((action, key) => {
-                                    return (
-                                        <h4 key={key}>
-                                            {action.from.name} ->
-                                            {action.amount.toFormat(
-                                                "$0,0.00"
-                                            )}{" "}
-                                            -> {action.to.name}
-                                        </h4>
-                                    );
-                                })}
-                            </div>
+                            <section>
+                                <PeopleList
+                                    people={people}
+                                    activityId={activityId}
+                                    authUser={authUser}
+                                />
+                            </section>
+                            <section>
+                                <BillsList
+                                    bills={bills}
+                                    people={people}
+                                    activityId={activityId}
+                                    authUser={authUser}
+                                />
+                            </section>
+                            <section>
+                                <Typography variant="h4" gutterBottom>
+                                    Split It! (Who do I send money to?)
+                                </Typography>
+                                <div>
+                                    {splits.map((action, key) => {
+                                        return (
+                                            <h4
+                                                key={key}
+                                                className={classes.splitHeader}>
+                                                <div
+                                                    className={
+                                                        classes.splitPersonIcon
+                                                    }>
+                                                    <PersonIcon
+                                                        className={
+                                                            classes.splitPersonIcon
+                                                        }
+                                                        name={action.from.name}
+                                                    />
+                                                </div>
+                                                <ArrowForward />
+                                                {action.amount.toFormat(
+                                                    "$0,0.00"
+                                                )}{" "}
+                                                <ArrowForward />
+                                                <div
+                                                    className={
+                                                        classes.splitPersonIcon
+                                                    }>
+                                                    <PersonIcon
+                                                        name={action.to.name}
+                                                    />
+                                                </div>
+                                            </h4>
+                                        );
+                                    })}
+                                </div>
+                                <p>
+                                    * The above balance breakdown may not be
+                                    perfect dont rely on it yet.
+                                </p>
+                            </section>
                         </div>
                     </div>
                 )}
@@ -293,4 +343,6 @@ class Activity extends Component {
 
 const condition = authUser => !!authUser;
 
-export default withRouter(withAuthorization(condition)(withFirebase(Activity)));
+export default withStyles(styles)(
+    withRouter(withAuthorization(condition)(withFirebase(Activity)))
+);

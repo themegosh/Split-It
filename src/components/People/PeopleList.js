@@ -4,6 +4,7 @@ import Person from "./Person";
 import Button from "@material-ui/core/Button";
 import EditPersonDialog from "./EditPersonDialog";
 import { withFirebase } from "../Firebase";
+import { Typography } from "@material-ui/core";
 
 class PeopleList extends Component {
     state = {
@@ -76,7 +77,9 @@ class PeopleList extends Component {
 
         return (
             <div className="people">
-                <h2>People</h2>
+                <Typography variant="h4" gutterBottom>
+                    People
+                </Typography>
                 <div className="people-list">
                     {Object.keys(people).map(uid => {
                         const person = people[uid];

@@ -21,11 +21,13 @@ const styles = {
     paidForWrapper: {
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "baseline"
+        alignItems: "baseline",
+        flexWrap: "wrap"
     },
     paidFor: {
-        margin: "0 5px 5px"
-    }
+        margin: "0 5px 20px"
+    },
+    icon: {}
 };
 
 class Bill extends Component {
@@ -42,17 +44,19 @@ class Bill extends Component {
                     <div className="header">
                         <h3 className="name">{bill.name}</h3>
                         <div className="cost-wrapper">
+                            <div className="split-cost">
+                                {people[bill.payer].name} paid
+                            </div>
                             <div className="cost">
                                 {bill.cost.toFormat("$0,0.00")}
                             </div>
-                            <div className="split-cost">
+                            <div>
+                                {" "}
                                 ({bill.splitCost.toFormat("$0,0.00")} each)
                             </div>
                         </div>
                     </div>
                     <div className="footer">
-                        <div className="payer">{people[bill.payer].name} </div>
-                        paid for
                         <div className={classes.paidForWrapper}>
                             {bill.paidFor.map((person, key) => {
                                 return (

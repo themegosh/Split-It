@@ -1,5 +1,6 @@
 import React from "react";
 import Avatar from "@material-ui/core/Avatar";
+import { Tooltip } from "@material-ui/core";
 
 function hashCode(str) {
     // java String#hashCode
@@ -44,9 +45,11 @@ const PersonIcon = props => {
     };
 
     return (
-        <Avatar className="person-icon" style={iconStyles}>
-            {initals}
-        </Avatar>
+        <Tooltip title={props.name}>
+            <Avatar className="person-icon" style={iconStyles}>
+                {initals}
+            </Avatar>
+        </Tooltip>
     );
 };
 
