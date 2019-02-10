@@ -11,6 +11,7 @@ import cloneDeep from "lodash/cloneDeep";
 import PersonIcon from "../People/PersonIcon";
 import { withStyles, Typography } from "@material-ui/core";
 import { ArrowForward } from "@material-ui/icons";
+import Loader from "../Loader/Loader";
 
 const styles = {
     splitPersonIcon: {
@@ -256,7 +257,7 @@ class Activity extends Component {
         return (
             <div className="activity">
                 {loading ? (
-                    <div>Loading...</div>
+                    <Loader />
                 ) : (
                     <div>
                         <section>

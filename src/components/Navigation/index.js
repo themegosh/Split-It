@@ -31,6 +31,9 @@ const styles = {
         left: 0,
         right: 0,
         margin: "0 auto"
+    },
+    fabIcon: {
+        fontSize: "32px"
     }
 };
 
@@ -95,7 +98,12 @@ class Navigation extends React.Component {
                             onClick={this.btnHome}
                             color="secondary"
                             className={classes.fabButton}>
-                            <LocalAtm />
+                            <span
+                                role="img"
+                                className={classes.fabIcon}
+                                aria-label="Activities">
+                                💰
+                            </span>
                         </Fab>
                     </Tooltip>
                     {menuButtons}

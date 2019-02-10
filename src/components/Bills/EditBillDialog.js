@@ -50,7 +50,8 @@ class EditBillDialog extends Component {
 
         this.state = {
             bill: props.bill,
-            chkPeople
+            chkPeople,
+            saving: false
         };
     }
 
@@ -59,19 +60,22 @@ class EditBillDialog extends Component {
         const { billId, firebase, activityId } = this.props;
         const userId = this.props.authUser.uid;
 
+        this.setState({ saving: true });
+
         console.log("handleSave", userId, activityId);
 
         if (billId) {
             firebase
                 .bills(userId, activityId)
                 .child(billId)
-                .set(bill, error => {
-                    if (error) {
-                        this.setState({ error });
-                    } else {
-                        console.log("updated bill!");
-                        this.props.onClose();
-                    }
+                .set(bill)
+                .then(() => {
+                    console.log("saved!");
+                    this.setState({ saving: false });
+                    this.props.onClose();
+                })
+                .catch(error => {
+                    this.setState({ error, saving: false });
                 });
         } else {
             firebase.bills(userId, activityId).push(bill, error => {
@@ -155,10 +159,8 @@ class EditBillDialog extends Component {
     };
 
     render() {
-        const { bill, chkPeople } = this.state;
-        const { people, open, classes } = this.props;
-        const error =
-            !bill.name || !bill.cost || !bill.payer || bill.paidFor.length < 1;
+        const { bill, chkPeople, saving } = this.state;
+        const { people, open, classes, billId } = this.props;
 
         return (
             <Dialog
@@ -252,7 +254,10 @@ class EditBillDialog extends Component {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.btnDelete} color="secondary">
+                    <Button
+                        onClick={this.btnDelete}
+                        disabled={!billId}
+                        color="secondary">
                         Delete
                     </Button>
                     <Button onClick={this.props.onClose} color="default">
@@ -260,9 +265,15 @@ class EditBillDialog extends Component {
                     </Button>
                     <Button
                         onClick={this.btnSaveClick}
-                        disabled={error}
+                        disabled={
+                            !bill.name ||
+                            !bill.cost ||
+                            !bill.payer ||
+                            bill.paidFor.length < 1 ||
+                            saving
+                        }
                         color="primary">
-                        Save
+                        {saving ? "Saving..." : "Save"}
                     </Button>
                 </DialogActions>
             </Dialog>

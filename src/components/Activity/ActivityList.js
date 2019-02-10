@@ -16,6 +16,7 @@ import * as ROUTES from "../../constants/routes";
 import { withRouter } from "react-router-dom";
 
 import "./ActivityList.scss";
+import Loader from "../Loader/Loader";
 
 class ActivityList extends Component {
     state = {
@@ -34,6 +35,8 @@ class ActivityList extends Component {
         if (!this.props.authUser) {
             return;
         }
+
+        this.setState({ loading: true });
 
         this.props.firebase
             .activities(this.props.authUser.uid)
@@ -87,7 +90,8 @@ class ActivityList extends Component {
             activities,
             open,
             selectedActivity,
-            selectedActivityUid
+            selectedActivityUid,
+            loading
         } = this.state;
         const userId = this.props.authUser && this.props.authUser.uid;
 
@@ -104,53 +108,72 @@ class ActivityList extends Component {
                 />
             );
         }
+        let loader;
+        let activityList;
+        if (loading) {
+            loader = <Loader />;
+        } else {
+            activityList = (
+                <div style={{ width: "100%" }}>
+                    {Object.keys(activities).map(uid => {
+                        const activity = activities[uid];
+                        return (
+                            <Card className="activity-item" key={uid}>
+                                <div onClick={() => this.btnGoToActivity(uid)}>
+                                    <CardActionArea>
+                                        <CardContent>
+                                            <Typography
+                                                gutterBottom
+                                                variant="h5"
+                                                component="h2">
+                                                {activity.name}
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </div>
+                                <CardActions>
+                                    <Button
+                                        size="small"
+                                        color="primary"
+                                        onClick={() =>
+                                            this.btnEditActivity(uid)
+                                        }>
+                                        Rename
+                                    </Button>
+                                    <Button
+                                        onClick={() =>
+                                            this.btnDeleteActivity(uid)
+                                        }
+                                        color="secondary"
+                                        size="small">
+                                        Delete
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        );
+                    })}
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => this.btnEditActivity(null)}
+                        style={{ width: "100%" }}>
+                        New Activity
+                    </Button>
+                    {editDialog}
+                </div>
+            );
+        }
 
         return (
             <div className="activity-list">
-                <h1>Activites</h1>
-                <h3>Collections of bills to split with people</h3>
-
-                {Object.keys(activities).map(uid => {
-                    const activity = activities[uid];
-                    return (
-                        <Card className="activity-item" key={uid}>
-                            <div onClick={() => this.btnGoToActivity(uid)}>
-                                <CardActionArea>
-                                    <CardContent>
-                                        <Typography
-                                            gutterBottom
-                                            variant="h5"
-                                            component="h2">
-                                            {activity.name}
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                            </div>
-                            <CardActions>
-                                <Button
-                                    size="small"
-                                    color="primary"
-                                    onClick={() => this.btnEditActivity(uid)}>
-                                    Rename
-                                </Button>
-                                <Button
-                                    onClick={() => this.btnDeleteActivity(uid)}
-                                    color="secondary"
-                                    size="small">
-                                    Delete
-                                </Button>
-                            </CardActions>
-                        </Card>
-                    );
-                })}
-                <hr />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => this.btnEditActivity(null)}>
-                    New Activity
-                </Button>
-                {editDialog}
+                <Typography variant="h2" gutterBottom>
+                    Activites
+                </Typography>
+                <Typography variant="h5" gutterBottom>
+                    Collections of bills to split with people
+                </Typography>
+                {loader}
+                {activityList}
             </div>
         );
     }
