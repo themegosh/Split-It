@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import Chip from "@material-ui/core/Chip";
-import { withStyles } from "@material-ui/core";
+import { withStyles, Chip } from "@material-ui/core";
 
 import "./Bill.scss";
 import PersonIcon from "../People/PersonIcon";
+import PersonChip from "../People/PersonChip";
 
 const styles = {
     chkItems: {
@@ -43,31 +43,25 @@ class Bill extends Component {
                     }>
                     <div className="header">
                         <h3 className="name">{bill.name}</h3>
-                        <div className="cost-wrapper">
-                            <div className="split-cost">
-                                {people[bill.payer].name} paid
-                            </div>
-                            <div className="cost">
-                                {bill.cost.toFormat("$0,0.00")}
-                            </div>
-                            <div>
-                                {" "}
-                                ({bill.splitCost.toFormat("$0,0.00")} each)
-                            </div>
-                        </div>
                     </div>
+                    <div className="cost-wrapper">
+                        <div className="split-cost">
+                            <PersonChip name={people[bill.payer].name} />
+                        </div>
+                        <div>paid</div>
+                        <div className="cost">
+                            {bill.cost.toFormat("$0,0.00")}
+                        </div>
+                        <div>({bill.splitCost.toFormat("$0,0.00")} each)</div>
+                    </div>
+                    <hr />
                     <div className="footer">
                         <div className={classes.paidForWrapper}>
                             {bill.paidFor.map((person, key) => {
                                 return (
-                                    <Chip
+                                    <PersonIcon
+                                        name={people[person].name}
                                         key={key}
-                                        avatar={
-                                            <PersonIcon
-                                                name={people[person].name}
-                                            />
-                                        }
-                                        label={people[person].name}
                                         className={classes.paidFor}
                                     />
                                 );

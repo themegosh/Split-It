@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "./Activity.scss";
 import BillsList from "../Bills/BillsList";
 import PeopleList from "../People/PeopleList";
 import { withFirebase } from "../Firebase";
@@ -8,10 +7,12 @@ import { withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import Dinero from "dinero.js";
 import cloneDeep from "lodash/cloneDeep";
-import PersonIcon from "../People/PersonIcon";
-import { withStyles, Typography } from "@material-ui/core";
+import { withStyles, Typography, Paper } from "@material-ui/core";
 import { ArrowForward } from "@material-ui/icons";
 import Loader from "../Loader/Loader";
+import PersonChip from "../People/PersonChip";
+
+import "./Activity.scss";
 
 const styles = {
     splitPersonIcon: {
@@ -19,7 +20,10 @@ const styles = {
     },
     splitHeader: {
         fontSize: "27px",
-        margin: "16px"
+        margin: "16px",
+        display: "flex",
+        alignItems: "baseline",
+        justifyContent: "space-between"
     }
 };
 
@@ -295,40 +299,47 @@ class Activity extends Component {
                                 <Typography variant="h4" gutterBottom>
                                     Split It! (Who do I send money to?)
                                 </Typography>
-                                <div>
+                                <Paper style={{ padding: "11px" }}>
                                     {splits.map((action, key) => {
                                         return (
-                                            <h4
+                                            <div
                                                 key={key}
                                                 className={classes.splitHeader}>
                                                 <div
                                                     className={
                                                         classes.splitPersonIcon
                                                     }>
-                                                    <PersonIcon
-                                                        className={
-                                                            classes.splitPersonIcon
-                                                        }
+                                                    <PersonChip
                                                         name={action.from.name}
+                                                        className={
+                                                            classes.paidFor
+                                                        }
                                                     />
                                                 </div>
-                                                <ArrowForward />
+                                                <ArrowForward
+                                                    style={{ fontSize: "20px" }}
+                                                />
                                                 {action.amount.toFormat(
                                                     "$0,0.00"
                                                 )}{" "}
-                                                <ArrowForward />
+                                                <ArrowForward
+                                                    style={{ fontSize: "20px" }}
+                                                />
                                                 <div
                                                     className={
                                                         classes.splitPersonIcon
                                                     }>
-                                                    <PersonIcon
+                                                    <PersonChip
                                                         name={action.to.name}
+                                                        className={
+                                                            classes.paidFor
+                                                        }
                                                     />
                                                 </div>
-                                            </h4>
+                                            </div>
                                         );
                                     })}
-                                </div>
+                                </Paper>
                                 <p>
                                     * The above balance breakdown may not be
                                     perfect dont rely on it yet.

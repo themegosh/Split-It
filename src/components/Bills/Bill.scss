@@ -16,26 +16,28 @@
 
     .header {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: space-between;
         margin-bottom: 16px;
 
         .name {
             margin: 0;
             font-size: 30px;
+            text-align: center;
         }
+    }
+    .cost-wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        margin-bottom: 16px;
 
-        .cost-wrapper {
-            display: flex;
-            flex-direction: row;
-
-            .cost {
-                font-weight: bold;
-                color: #444;
-            }
-            .split-cost {
-                margin-left: 6px;
-            }
+        .cost {
+            font-weight: bold;
+            color: #444;
+        }
+        .split-cost {
+            margin-left: 6px;
         }
     }
 
@@ -43,24 +45,11 @@
         display: flex;
         flex-direction: row;
 
-        .payer {
-            font-weight: bold;
-            margin-right: 4px;
-        }
-
-        .paid-for-wrapper {
-            display: flex;
-            flex-direction: row;
-            margin-left: 5px;
-
-            .name {
-                color: #fff;
-                background-color: #282c34;
-                font-size: 0.8em;
-                border-radius: 3px;
-                padding: 4px 8px;
-                margin-right: 4px;
-            }
+        .person-icon {
+            margin: 0 5px;
+            font-size: 16px;
+            width: 30px;
+            height: 30px;
         }
     }
 }
