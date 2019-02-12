@@ -13,19 +13,9 @@ import Loader from "../Loader/Loader";
 import PersonChip from "../People/PersonChip";
 
 import "./Activity.scss";
+import BalanceBreakdown from "../BalanceBreakdown/BalanceBreakdown";
 
-const styles = {
-    splitPersonIcon: {
-        display: "inline-flex"
-    },
-    splitHeader: {
-        fontSize: "27px",
-        margin: "16px",
-        display: "flex",
-        alignItems: "baseline",
-        justifyContent: "space-between"
-    }
-};
+const styles = {};
 
 const toPrice = (amount, factor = Math.pow(10, 2)) => {
     return Dinero({ amount: Math.round(amount * factor) });
@@ -296,54 +286,7 @@ class Activity extends Component {
                                 />
                             </section>
                             <section>
-                                <Typography variant="h4" gutterBottom>
-                                    Split It! (Who do I send money to?)
-                                </Typography>
-                                <Paper style={{ padding: "11px" }}>
-                                    {splits.map((action, key) => {
-                                        return (
-                                            <div
-                                                key={key}
-                                                className={classes.splitHeader}>
-                                                <div
-                                                    className={
-                                                        classes.splitPersonIcon
-                                                    }>
-                                                    <PersonChip
-                                                        name={action.from.name}
-                                                        className={
-                                                            classes.paidFor
-                                                        }
-                                                    />
-                                                </div>
-                                                <ArrowForward
-                                                    style={{ fontSize: "20px" }}
-                                                />
-                                                {action.amount.toFormat(
-                                                    "$0,0.00"
-                                                )}{" "}
-                                                <ArrowForward
-                                                    style={{ fontSize: "20px" }}
-                                                />
-                                                <div
-                                                    className={
-                                                        classes.splitPersonIcon
-                                                    }>
-                                                    <PersonChip
-                                                        name={action.to.name}
-                                                        className={
-                                                            classes.paidFor
-                                                        }
-                                                    />
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </Paper>
-                                <p>
-                                    * The above balance breakdown may not be
-                                    perfect dont rely on it yet.
-                                </p>
+                                <BalanceBreakdown splits={splits} />
                             </section>
                         </div>
                     </div>
