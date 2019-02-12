@@ -1,10 +1,9 @@
 .people {
     .people-list {
-        flex-wrap: wrap;
-        display: block;
+        display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        align-items: flex-end;
+        justify-content: space-between;
 
         .person {
             flex-direction: column;

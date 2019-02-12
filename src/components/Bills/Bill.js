@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withStyles, Chip } from "@material-ui/core";
+import { withStyles, Paper } from "@material-ui/core";
 
 import "./Bill.scss";
 import PersonIcon from "../People/PersonIcon";
@@ -35,7 +35,7 @@ class Bill extends Component {
         const { bill, people, classes } = this.props;
 
         return (
-            <div className="bill-wrapper">
+            <Paper className="bill-wrapper">
                 <div
                     className="bill"
                     onClick={() =>
@@ -69,7 +69,7 @@ class Bill extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </Paper>
         );
     }
 }
