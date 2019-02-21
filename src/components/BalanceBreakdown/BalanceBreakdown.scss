@@ -1,0 +1,26 @@
+.balanace-breakdown {
+    text-align: center;
+
+    .paper {
+        flex-direction: column;
+        padding: 15px;
+    }
+    .split {
+        display: flex;
+        font-size: 27px;
+        margin: 16px;
+        align-items: center;
+        justify-content: space-between;
+
+        .amount {
+            margin: 0 5px;
+        }
+        .person-chip {
+        }
+
+        .split-direction {
+            font-size: 30px;
+            margin: 0 10px;
+        }
+    }
+}

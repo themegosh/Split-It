@@ -2,25 +2,27 @@
     .footer {
         display: flex;
         flex-direction: row;
+        justify-content: space-around;
+        margin-bottom: 16px;
 
-        .payer {
+        .cost {
             font-weight: bold;
-            margin-right: 4px;
+            color: #444;
         }
+        .split-cost {
+            margin-left: 6px;
+        }
+    }
 
-        .paid-for-wrapper {
-            display: flex;
-            flex-direction: row;
-            margin-left: 5px;
+    .footer {
+        display: flex;
+        flex-direction: row;
 
-            .name {
-                color: #fff;
-                background-color: #282c34;
-                font-size: 0.8em;
-                border-radius: 3px;
-                padding: 4px 8px;
-                margin-right: 4px;
-            }
+        .person-icon {
+            margin: 0 5px;
+            font-size: 16px;
+            width: 30px;
+            height: 30px;
         }
     }
 }

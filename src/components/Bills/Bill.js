@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Chip from "@material-ui/core/Chip";
 import {
     withStyles,
     Card,
@@ -66,14 +65,9 @@ class Bill extends Component {
                     <div className={classes.paidForWrapper}>
                         {bill.paidFor.map((person, key) => {
                             return (
-                                <Chip
+                                <PersonIcon
+                                    name={people[person].name}
                                     key={key}
-                                    avatar={
-                                        <PersonIcon
-                                            name={people[person].name}
-                                        />
-                                    }
-                                    label={people[person].name}
                                     className={classes.paidFor}
                                 />
                             );

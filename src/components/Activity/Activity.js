@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "./Activity.scss";
 import BillsList from "../Bills/BillsList";
 import PeopleList from "../People/PeopleList";
 import { withFirebase } from "../Firebase";
@@ -9,25 +8,15 @@ import * as ROUTES from "../../constants/routes";
 import Dinero from "dinero.js";
 import cloneDeep from "lodash/cloneDeep";
 import PersonIcon from "../People/PersonIcon";
-import {
-    withStyles,
-    Typography,
-    Card,
-    CardHeader,
-    CardContent
-} from "@material-ui/core";
+import { withStyles, Typography, Card, CardContent } from "@material-ui/core";
 import { ArrowForward } from "@material-ui/icons";
 import Loader from "../Loader/Loader";
+import PersonChip from "../People/PersonChip";
 
-const styles = {
-    splitPersonIcon: {
-        display: "inline-flex"
-    },
-    splitHeader: {
-        fontSize: "27px",
-        margin: "16px"
-    }
-};
+import "./Activity.scss";
+import BalanceBreakdown from "../BalanceBreakdown/BalanceBreakdown";
+
+const styles = {};
 
 const toPrice = (amount, factor = Math.pow(10, 2)) => {
     return Dinero({ amount: Math.round(amount * factor) });
@@ -302,47 +291,7 @@ class Activity extends Component {
                                 />
                             </section>
                             <section>
-                                <Typography variant="h4" gutterBottom>
-                                    Split It! (Who do I send money to?)
-                                </Typography>
-                                <div>
-                                    {splits.map((action, key) => {
-                                        return (
-                                            <h4
-                                                key={key}
-                                                className={classes.splitHeader}>
-                                                <div
-                                                    className={
-                                                        classes.splitPersonIcon
-                                                    }>
-                                                    <PersonIcon
-                                                        className={
-                                                            classes.splitPersonIcon
-                                                        }
-                                                        name={action.from.name}
-                                                    />
-                                                </div>
-                                                <ArrowForward />
-                                                {action.amount.toFormat(
-                                                    "$0,0.00"
-                                                )}{" "}
-                                                <ArrowForward />
-                                                <div
-                                                    className={
-                                                        classes.splitPersonIcon
-                                                    }>
-                                                    <PersonIcon
-                                                        name={action.to.name}
-                                                    />
-                                                </div>
-                                            </h4>
-                                        );
-                                    })}
-                                </div>
-                                <p>
-                                    * The above balance breakdown may not be
-                                    perfect dont rely on it yet.
-                                </p>
+                                <BalanceBreakdown splits={splits} />
                             </section>
                         </div>
                     </div>
