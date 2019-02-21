@@ -123,7 +123,6 @@ class ActivityList extends Component {
                                     <CardActionArea>
                                         <CardContent>
                                             <Typography
-                                                gutterBottom
                                                 variant="h5"
                                                 component="h2">
                                                 {activity.name}

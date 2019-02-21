@@ -9,7 +9,13 @@ import * as ROUTES from "../../constants/routes";
 import Dinero from "dinero.js";
 import cloneDeep from "lodash/cloneDeep";
 import PersonIcon from "../People/PersonIcon";
-import { withStyles, Typography } from "@material-ui/core";
+import {
+    withStyles,
+    Typography,
+    Card,
+    CardHeader,
+    CardContent
+} from "@material-ui/core";
 import { ArrowForward } from "@material-ui/icons";
 import Loader from "../Loader/Loader";
 
@@ -261,19 +267,23 @@ class Activity extends Component {
                 ) : (
                     <div>
                         <section>
-                            <Typography variant="h2" gutterBottom>
-                                {name}
-                            </Typography>
-                            <div className="activities-summary">
-                                <div>
-                                    Total Costs Paid:
-                                    {totalCostsPaid.toFormat("$0,0.00")}
-                                </div>
-                                <div>
-                                    total Costs Owed:{" "}
-                                    {totalCostsOwed.toFormat("$0,0.00")}
-                                </div>
-                            </div>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h2" gutterBottom>
+                                        {name}
+                                    </Typography>
+                                </CardContent>
+                                <CardContent>
+                                    <Typography component="p">
+                                        Total Costs Paid:
+                                        {totalCostsPaid.toFormat("$0,0.00")}
+                                    </Typography>
+                                    <Typography component="p">
+                                        total Costs Owed:{" "}
+                                        {totalCostsOwed.toFormat("$0,0.00")}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
                         </section>
                         <div className="middle-wrapper">
                             <section>

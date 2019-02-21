@@ -34,6 +34,9 @@ const styles = {
     },
     fabIcon: {
         fontSize: "32px"
+    },
+    appBar: {
+        backgroundColor: "#151515"
     }
 };
 
@@ -83,7 +86,7 @@ class Navigation extends React.Component {
         }
 
         return (
-            <AppBar position="static">
+            <AppBar position="static" className={classes.appBar}>
                 <Toolbar>
                     <Typography
                         onClick={this.btnHome}

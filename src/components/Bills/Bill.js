@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import Chip from "@material-ui/core/Chip";
-import { withStyles } from "@material-ui/core";
+import {
+    withStyles,
+    Card,
+    CardActionArea,
+    CardContent,
+    Typography
+} from "@material-ui/core";
 
 import "./Bill.scss";
 import PersonIcon from "../People/PersonIcon";
@@ -35,47 +41,46 @@ class Bill extends Component {
         const { bill, people, classes } = this.props;
 
         return (
-            <div className="bill-wrapper">
-                <div
-                    className="bill"
-                    onClick={() =>
-                        this.props.handleClickOpen(this.props.index, bill)
-                    }>
-                    <div className="header">
-                        <h3 className="name">{bill.name}</h3>
-                        <div className="cost-wrapper">
-                            <div className="split-cost">
-                                {people[bill.payer].name} paid
-                            </div>
-                            <div className="cost">
-                                {bill.cost.toFormat("$0,0.00")}
-                            </div>
-                            <div>
-                                {" "}
-                                ({bill.splitCost.toFormat("$0,0.00")} each)
-                            </div>
-                        </div>
-                    </div>
-                    <div className="footer">
-                        <div className={classes.paidForWrapper}>
-                            {bill.paidFor.map((person, key) => {
-                                return (
-                                    <Chip
-                                        key={key}
-                                        avatar={
-                                            <PersonIcon
-                                                name={people[person].name}
-                                            />
-                                        }
-                                        label={people[person].name}
-                                        className={classes.paidFor}
-                                    />
-                                );
-                            })}
-                        </div>
+            <Card
+                className="bill"
+                onClick={() =>
+                    this.props.handleClickOpen(this.props.index, bill)
+                }>
+                <CardActionArea>
+                    <CardContent>
+                        <Typography variant="h5">{bill.name}</Typography>
+                    </CardContent>
+                </CardActionArea>
+                <CardContent>
+                    <Typography component="p">
+                        {people[bill.payer].name} paid
+                    </Typography>
+                    <Typography component="p">
+                        {bill.cost.toFormat("$0,0.00")}
+                    </Typography>
+                    <Typography component="p">
+                        ({bill.splitCost.toFormat("$0,0.00")} each)
+                    </Typography>
+                </CardContent>
+                <div className="footer">
+                    <div className={classes.paidForWrapper}>
+                        {bill.paidFor.map((person, key) => {
+                            return (
+                                <Chip
+                                    key={key}
+                                    avatar={
+                                        <PersonIcon
+                                            name={people[person].name}
+                                        />
+                                    }
+                                    label={people[person].name}
+                                    className={classes.paidFor}
+                                />
+                            );
+                        })}
                     </div>
                 </div>
-            </div>
+            </Card>
         );
     }
 }
