@@ -11,6 +11,9 @@ import "./Bill.scss";
 import PersonIcon from "../People/PersonIcon";
 
 const styles = {
+    bill: {
+        marginBottom: "15px"
+    },
     chkItems: {
         display: "flex",
         flexDirection: "row",
@@ -41,7 +44,7 @@ class Bill extends Component {
 
         return (
             <Card
-                className="bill"
+                className={classes.bill}
                 onClick={() =>
                     this.props.handleClickOpen(this.props.index, bill)
                 }>
@@ -61,19 +64,17 @@ class Bill extends Component {
                         ({bill.splitCost.toFormat("$0,0.00")} each)
                     </Typography>
                 </CardContent>
-                <div className="footer">
-                    <div className={classes.paidForWrapper}>
-                        {bill.paidFor.map((person, key) => {
-                            return (
-                                <PersonIcon
-                                    name={people[person].name}
-                                    key={key}
-                                    className={classes.paidFor}
-                                />
-                            );
-                        })}
-                    </div>
-                </div>
+                <CardContent className={classes.paidForWrapper}>
+                    {bill.paidFor.map((person, key) => {
+                        return (
+                            <PersonIcon
+                                name={people[person].name}
+                                key={key}
+                                className={classes.paidFor}
+                            />
+                        );
+                    })}
+                </CardContent>
             </Card>
         );
     }

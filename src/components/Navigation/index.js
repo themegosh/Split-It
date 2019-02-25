@@ -3,7 +3,6 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import LocalAtm from "@material-ui/icons/LocalAtm";
 import Fab from "@material-ui/core/Fab";
 import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
@@ -30,13 +29,18 @@ const styles = {
         bottom: -30,
         left: 0,
         right: 0,
-        margin: "0 auto"
+        margin: "0 auto",
+        fontSize: "2.7em",
+        width: "75px",
+        height: "75px",
+        backgroundColor: "transparent"
     },
     fabIcon: {
-        fontSize: "32px"
+        //fontSize: "32px"
     },
     appBar: {
-        backgroundColor: "#151515"
+        backgroundColor: "transparent",
+        marginBottom: "60px"
     }
 };
 

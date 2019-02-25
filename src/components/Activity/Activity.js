@@ -7,11 +7,8 @@ import { withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import Dinero from "dinero.js";
 import cloneDeep from "lodash/cloneDeep";
-import PersonIcon from "../People/PersonIcon";
 import { withStyles, Typography, Card, CardContent } from "@material-ui/core";
-import { ArrowForward } from "@material-ui/icons";
 import Loader from "../Loader/Loader";
-import PersonChip from "../People/PersonChip";
 
 import "./Activity.scss";
 import BalanceBreakdown from "../BalanceBreakdown/BalanceBreakdown";
@@ -250,7 +247,7 @@ class Activity extends Component {
         });
 
         return (
-            <div className="activity">
+            <div className="container-fluid activity">
                 {loading ? (
                     <Loader />
                 ) : (
@@ -274,26 +271,28 @@ class Activity extends Component {
                                 </CardContent>
                             </Card>
                         </section>
-                        <div className="middle-wrapper">
-                            <section>
-                                <PeopleList
-                                    people={people}
-                                    activityId={activityId}
-                                    authUser={authUser}
-                                />
-                            </section>
-                            <section>
-                                <BillsList
-                                    bills={bills}
-                                    people={people}
-                                    activityId={activityId}
-                                    authUser={authUser}
-                                />
-                            </section>
-                            <section>
-                                <BalanceBreakdown splits={splits} />
-                            </section>
-                        </div>
+                        <section>
+                            <div className="row">
+                                <div className="col-4">
+                                    <PeopleList
+                                        people={people}
+                                        activityId={activityId}
+                                        authUser={authUser}
+                                    />
+                                </div>
+                                <div className="col-8">
+                                    <BillsList
+                                        bills={bills}
+                                        people={people}
+                                        activityId={activityId}
+                                        authUser={authUser}
+                                    />
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <BalanceBreakdown splits={splits} />
+                        </section>
                     </div>
                 )}
             </div>

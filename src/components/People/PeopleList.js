@@ -94,14 +94,14 @@ class PeopleList extends Component {
                             />
                         );
                     })}
-
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => this.handleClickOpen(null)}>
-                        Add Person
-                    </Button>
                 </div>
+
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => this.handleClickOpen(null)}>
+                    Add Person
+                </Button>
                 {editDialog}
             </div>
         );

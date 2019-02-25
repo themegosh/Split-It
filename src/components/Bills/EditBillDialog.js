@@ -255,15 +255,20 @@ class EditBillDialog extends Component {
                 </DialogContent>
                 <DialogActions>
                     <Button
+                        variant="contained"
                         onClick={this.btnDelete}
                         disabled={!billId}
                         color="secondary">
                         Delete
                     </Button>
-                    <Button onClick={this.props.onClose} color="default">
+                    <Button
+                        variant="contained"
+                        onClick={this.props.onClose}
+                        color="default">
                         Cancel
                     </Button>
                     <Button
+                        variant="contained"
                         onClick={this.btnSaveClick}
                         disabled={
                             !bill.name ||

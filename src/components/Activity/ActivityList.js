@@ -93,6 +93,7 @@ class ActivityList extends Component {
             selectedActivityUid,
             loading
         } = this.state;
+
         const userId = this.props.authUser && this.props.authUser.uid;
 
         let editDialog;
@@ -114,7 +115,7 @@ class ActivityList extends Component {
             loader = <Loader />;
         } else {
             activityList = (
-                <div style={{ width: "100%" }}>
+                <div className="container">
                     {Object.keys(activities).map(uid => {
                         const activity = activities[uid];
                         return (

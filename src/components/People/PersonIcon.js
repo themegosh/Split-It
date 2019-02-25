@@ -44,8 +44,10 @@ const PersonIcon = props => {
         color: getColorByBgColor(bgColor)
     };
 
+    const { className } = props;
+
     return (
-        <Tooltip title={props.name}>
+        <Tooltip title={props.name} className={className}>
             <Avatar className="person-icon" style={iconStyles}>
                 {initals}
             </Avatar>
