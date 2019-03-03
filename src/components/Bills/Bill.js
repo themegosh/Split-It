@@ -9,6 +9,7 @@ import {
 
 import "./Bill.scss";
 import PersonIcon from "../People/PersonIcon";
+import PersonChip from "../People/PersonChip";
 
 const styles = {
     bill: {
@@ -50,20 +51,25 @@ class Bill extends Component {
                 }>
                 <CardActionArea>
                     <CardContent>
-                        <Typography variant="h5">{bill.name}</Typography>
+                        <div className="row">
+                            <div className="col-md text-left">
+                                <Typography variant="h5">
+                                    {bill.name}
+                                </Typography>
+                            </div>
+                            <div className="col-md text-right">
+                                <Typography component="div">
+                                    <PersonChip
+                                        name={people[bill.payer].name}
+                                        className="person-chip"
+                                    />{" "}
+                                    paid {bill.cost.toFormat("$0,0.00")} (
+                                    {bill.splitCost.toFormat("$0,0.00")} each)
+                                </Typography>
+                            </div>
+                        </div>
                     </CardContent>
                 </CardActionArea>
-                <CardContent>
-                    <Typography component="p">
-                        {people[bill.payer].name} paid
-                    </Typography>
-                    <Typography component="p">
-                        {bill.cost.toFormat("$0,0.00")}
-                    </Typography>
-                    <Typography component="p">
-                        ({bill.splitCost.toFormat("$0,0.00")} each)
-                    </Typography>
-                </CardContent>
                 <CardContent className={classes.paidForWrapper}>
                     {bill.paidFor.map((person, key) => {
                         return (

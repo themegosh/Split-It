@@ -33,9 +33,11 @@ const BalanceBreakdown = props => {
                                         </Typography>
                                     </td>
                                     <td>
-                                        <span className="amount">
+                                        <Typography
+                                            component="p"
+                                            className="amount">
                                             {action.amount.toFormat("$0,0.00")}
-                                        </span>
+                                        </Typography>
                                     </td>
                                     <td>
                                         <Typography component="p">

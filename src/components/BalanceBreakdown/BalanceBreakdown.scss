@@ -8,10 +8,15 @@
     }
 
     .amount {
-        margin: 0 5px;
+        // margin: 0 5px;
     }
     .split-direction {
         font-size: 30px;
-        margin: 0 10px;
+        // margin: 0 10px;
+    }
+
+    .table td {
+        vertical-align: baseline;
+        padding: 0;
     }
 }

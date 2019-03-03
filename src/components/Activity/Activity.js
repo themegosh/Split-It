@@ -7,7 +7,7 @@ import { withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import Dinero from "dinero.js";
 import cloneDeep from "lodash/cloneDeep";
-import { withStyles, Typography, Card, CardContent } from "@material-ui/core";
+import { withStyles, Typography } from "@material-ui/core";
 import Loader from "../Loader/Loader";
 
 import "./Activity.scss";
@@ -229,15 +229,15 @@ class Activity extends Component {
     render() {
         const {
             bills,
-            totalCostsPaid,
-            totalCostsOwed,
+            //totalCostsPaid,
+            //totalCostsOwed,
             people,
             loading,
             name,
             splits
         } = this.state;
 
-        const { authUser, classes } = this.props;
+        const { authUser } = this.props;
 
         const activityId = this.props.match.params.id;
 
@@ -247,17 +247,20 @@ class Activity extends Component {
         });
 
         return (
-            <div className="container-fluid activity">
+            <div className="container-fluid activity text-center">
                 {loading ? (
                     <Loader />
                 ) : (
                     <div>
                         <section>
-                            <Card>
+                            <Typography
+                                variant="h2"
+                                className="text-center"
+                                gutterBottom>
+                                {name}
+                            </Typography>
+                            {/* <Card>
                                 <CardContent>
-                                    <Typography variant="h2" gutterBottom>
-                                        {name}
-                                    </Typography>
                                 </CardContent>
                                 <CardContent>
                                     <Typography component="p">
@@ -269,18 +272,18 @@ class Activity extends Component {
                                         {totalCostsOwed.toFormat("$0,0.00")}
                                     </Typography>
                                 </CardContent>
-                            </Card>
+                            </Card> */}
                         </section>
                         <section>
                             <div className="row">
-                                <div className="col-md-4">
+                                <div className="col-lg-5 col-md-6">
                                     <PeopleList
                                         people={people}
                                         activityId={activityId}
                                         authUser={authUser}
                                     />
                                 </div>
-                                <div className="col-md-8">
+                                <div className="col-lg-7 col-md-6">
                                     <BillsList
                                         bills={bills}
                                         people={people}
