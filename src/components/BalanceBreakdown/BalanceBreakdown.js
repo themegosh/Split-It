@@ -12,29 +12,47 @@ const BalanceBreakdown = props => {
             <Typography variant="h4" gutterBottom>
                 Split It!
             </Typography>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h6" gutterBottom>
                 Who do I send money to?
             </Typography>
             <Paper className="paper">
-                {splits.map((action, key) => {
-                    return (
-                        <div key={key} className="split">
-                            <PersonChip
-                                name={action.from.name}
-                                className="person-chip"
-                            />
-                            <ArrowForward className="split-direction" />
-                            <span className="amount">
-                                {action.amount.toFormat("$0,0.00")}
-                            </span>
-                            <ArrowForward className="split-direction" />
-                            <PersonChip
-                                name={action.to.name}
-                                className="person-chip"
-                            />
-                        </div>
-                    );
-                })}
+                <table className="table table-borderless">
+                    <tbody>
+                        {splits.map((action, key) => {
+                            return (
+                                <tr key={key} className="split">
+                                    <td>
+                                        <PersonChip
+                                            name={action.from.name}
+                                            className="person-chip"
+                                        />
+                                    </td>
+                                    <td>
+                                        <Typography component="p">
+                                            <ArrowForward className="split-direction" />
+                                        </Typography>
+                                    </td>
+                                    <td>
+                                        <span className="amount">
+                                            {action.amount.toFormat("$0,0.00")}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <Typography component="p">
+                                            <ArrowForward className="split-direction" />
+                                        </Typography>
+                                    </td>
+                                    <td>
+                                        <PersonChip
+                                            name={action.to.name}
+                                            className="person-chip"
+                                        />
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
             </Paper>
         </div>
     );

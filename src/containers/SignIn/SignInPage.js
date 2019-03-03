@@ -14,10 +14,11 @@ import Paper from "@material-ui/core/Paper";
 import * as ROUTES from "../../constants/routes";
 
 import "./SignInPage.scss";
+import { Typography } from "@material-ui/core";
 
 const SignInPage = () => (
     <Paper className="small-paper-form" elevation={1}>
-        <h1>Sign In</h1>
+        <h2>Sign In</h2>
         <GoogleSignIn />
         <SignInForm />
         <ForgotPasswordLink />

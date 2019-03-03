@@ -273,14 +273,14 @@ class Activity extends Component {
                         </section>
                         <section>
                             <div className="row">
-                                <div className="col-4">
+                                <div className="col-md-4">
                                     <PeopleList
                                         people={people}
                                         activityId={activityId}
                                         authUser={authUser}
                                     />
                                 </div>
-                                <div className="col-8">
+                                <div className="col-md-8">
                                     <BillsList
                                         bills={bills}
                                         people={people}

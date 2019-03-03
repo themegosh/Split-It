@@ -28,12 +28,12 @@ const styles = {
     },
     paidForWrapper: {
         display: "flex",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         alignItems: "baseline",
         flexWrap: "wrap"
     },
     paidFor: {
-        margin: "0 5px 20px"
+        margin: "5px"
     },
     icon: {}
 };
